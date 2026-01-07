@@ -1,135 +1,54 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Servicios Migratorios</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        background: #f4f6f8;
-      }
-      header {
-        background: #1e3a8a;
-        color: white;
-        padding: 1rem 2rem;
-      }
-      nav a {
-        color: white;
-        margin-right: 1rem;
-        text-decoration: none;
-        font-weight: bold;
-      }
-      main {
-        padding: 2rem;
-      }
-      .card {
-        background: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        max-width: 400px;
-        margin: auto;
-      }
-      input,
-      button {
-        width: 100%;
-        padding: 0.6rem;
-        margin-top: 0.8rem;
-      }
-      button {
-        background: #1e3a8a;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-      }
-      button:hover {
-        background: #162e6f;
-      }
-      .hidden {
-        display: none;
-      }
-      ul {
-        padding-left: 1.2rem;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>Servicios Migratorios</h1>
-      <nav>
-        <a href="#" onclick="showSection('login')">Login</a>
-        <a href="#" onclick="showSection('plans')">Planes</a>
-        <a href="#" onclick="showSection('contact')">Contacto</a>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MovesLocation - Servicios Migratorios Profesionales</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 
-    <main>
-      <!-- Login -->
-      <section id="login" class="card">
-        <h2>Iniciar Sesión</h2>
-        <input type="email" id="email" placeholder="Correo electrónico" />
-        <input type="password" id="password" placeholder="Contraseña" />
-        <button onclick="login()">Entrar</button>
-      </section>
+</head>
+<body>
 
-      <!-- Dashboard -->
-      <section id="dashboard" class="card hidden">
-        <h2>Panel del Usuario</h2>
-        <p><strong>Estado del proceso:</strong> En revisión</p>
-        <h3>Documentos enviados</h3>
-        <ul>
-          <li>Pasaporte</li>
-          <li>Formulario de solicitud</li>
-        </ul>
-        <h3>Subir nuevo documento</h3>
-        <input type="file" />
-        <button>Subir</button>
-        <button onclick="logout()">Cerrar sesión</button>
-      </section>
+<header>
+  <h1>MovesLocation</h1>
+  <nav>
+    <a href="#sobre-nosotros">Sobre Nosotros</a>
+    <a href="#vision">Visión</a>
+    <a href="#objetivo">Objetivo</a>
+    <a href="#contacto">Contacto</a>
+    <a href="/login">Login</a>
+  </nav>
+</header>
 
-      <!-- Planes -->
-      <section id="plans" class="card hidden">
-        <h2>Planes de Apoyo</h2>
-        <ul>
-          <li><strong>Básico:</strong> Asesoría inicial</li>
-          <li><strong>Premium:</strong> Gestión completa del proceso</li>
-          <li><strong>Personalizado:</strong> Atención 1 a 1</li>
-        </ul>
-      </section>
+<section id="sobre-nosotros" class="section-card">
+  <h2>Sobre Nosotros</h2>
+  <p>En MovesLocation somos una empresa dedicada a ofrecer servicios migratorios profesionales y confiables. Trabajamos con abogados especializados en extranjería y contamos con expertos que guían a cada cliente durante su proceso.</p>
+</section>
 
-      <!-- Contacto -->
-      <section id="contact" class="card hidden">
-        <h2>Contacto</h2>
-        <input type="text" placeholder="Nombre" />
-        <input type="email" placeholder="Correo" />
-        <textarea placeholder="Mensaje" style="width: 100%; margin-top: 0.8rem"></textarea>
-        <button>Enviar</button>
-      </section>
-    </main>
+<section id="vision" class="section-card">
+  <h2>Visión</h2>
+  <p>Ser reconocidos como la empresa líder en asesoramiento migratorio, brindando soluciones personalizadas y efectivas que faciliten la integración de nuestros clientes en nuevos países.</p>
+</section>
 
-    <script>
-      function showSection(id) {
-        document.querySelectorAll('main section').forEach((s) => s.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-      }
+<section id="objetivo" class="section-card">
+  <h2>Objetivo</h2>
+  <p>Nuestro objetivo es asegurar que cada cliente tenga un proceso migratorio seguro y transparente, apoyado por profesionales con experiencia y compromiso.</p>
+</section>
 
-      function login() {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+<section id="contacto" class="section-card">
+  <h2>Contacto</h2>
+  <p>Para consultas o asistencia, visita nuestra página de contacto para enviarnos tus datos y tu caso.</p>
+  <a href="/contact">Ir a Contactanos</a>
+</section>
 
-        if (email && password) {
-          showSection('dashboard');
-        } else {
-          alert('Por favor ingresa tus datos');
-        }
-      }
+<footer>
+  <p>Síguenos en:</p>
+  <a href="#">Facebook</a> |
+  <a href="#">Twitter</a> |
+  <a href="#">Instagram</a>
+  <p>Teléfono: +34 123 456 789</p>
+  <p>Email: contacto@moveslocation.com</p>
+</footer>
 
-      function logout() {
-        showSection('login');
-      }
-    </script>
-  </body>
+</body>
 </html>

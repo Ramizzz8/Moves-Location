@@ -74,5 +74,19 @@ def logout():
     session.pop('user_id', None)
     return redirect('/login')
 
+# NUEVO: Ruta de contacto
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        telefono = request.form['telefono']
+        email = request.form['email']
+        mensaje = request.form['mensaje']
+        # Aquí puedes procesar los datos: enviar email o guardar en base de datos
+        print(f"Mensaje recibido de {nombre} ({email}, {telefono}): {mensaje}")
+        flash('Tu mensaje ha sido enviado correctamente')
+        return redirect(url_for('home'))
+    return render_template('contact.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

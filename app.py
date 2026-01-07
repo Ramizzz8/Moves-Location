@@ -1,46 +1,78 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask_sqlalchemy import SQLAlchemy
+import pymysql
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_segura'
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://miusuario:miclave@localhost/MovesLocation'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# USUARIOS SIMULADOS (luego se conecta a SQL)
-users = {
-'user@test.com': generate_password_hash('1234')
-}
+db = SQLAlchemy(app)
 
+# Modelos
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
 
-@app.route('/', methods=['GET'])
+# Crear tablas
+with app.app_context():
+    db.create_all()
+
+# Ruta principal (home)
+@app.route('/')
 def home():
-return render_template('index.html')
+    return render_template('index.html')
 
-
-@app.route('/login', methods=['POST'])
+# Ruta de login
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-email = request.form['email']
-password = request.form['password']
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            return redirect('/dashboard')
+        flash('Credenciales incorrectas')
+        return redirect('/login')
+    return render_template('login.html')
 
+# Ruta de registro
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        if password != confirm_password:
+            flash('Las contraseñas no coinciden')
+            return redirect('/register')
+        if User.query.filter_by(email=email).first():
+            flash('El correo ya está registrado')
+            return redirect('/register')
+        hashed_password = generate_password_hash(password)
+        new_user = User(email=email, password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+        session['user_id'] = new_user.id
+        return redirect('/dashboard')
+    return render_template('register.html')
 
-if email in users and check_password_hash(users[email], password):
-session['user'] = email
-return redirect('/dashboard')
-return 'Credenciales incorrectas'
-
-
+# Dashboard
 @app.route('/dashboard')
 def dashboard():
-if 'user' not in session:
-return redirect('/')
-return 'Panel del usuario (backend funcionando)'
+    if 'user_id' not in session:
+        return redirect('/login')
+    return render_template('dashboard.html')
 
-
+# Logout
 @app.route('/logout')
 def logout():
-session.pop('user', None)
-return redirect('/')
-
+    session.pop('user_id', None)
+    return redirect('/login')
 
 if __name__ == '__main__':
-app.run(debug=True)
+    app.run(debug=True)

@@ -17,8 +17,8 @@
       <div class="nav-links">
         <a href="#home" class="liquid-button" onclick="showSection('home')">Inicio</a>
         <a href="#plans" class="liquid-button" onclick="showSection('plans')">Planes</a>
-        <a href="#contact" class="liquid-button" onclick="showSection('contact')">Contacto</a>
-        <a href="/login" class="liquid-button primary">Iniciar Sesión</a>
+        <a href="{{ url_for('contact') }}" class="liquid-button" onclick="showSection('contact')">Contacto</a>
+        <a href="{{ url_for('login') }}" class="liquid-button primary">Iniciar Sesión</a>
       </div>
       <!-- Switch de modo oscuro/claro -->
       <div class="theme-switch-wrapper">

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
@@ -6,7 +6,7 @@ import pymysql
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_segura'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://miusuario:miclave@localhost/MovesLocation'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://movesadmin:Movesadmin1234$@localhost/MovesLocation'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)

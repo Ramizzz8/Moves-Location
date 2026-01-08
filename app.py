@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 import pymysql
@@ -6,7 +6,7 @@ import pymysql
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_segura'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://miusuario:miclave@localhost/MovesLocation'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://movesadmin:Movesadmin1234$@localhost/MovesLocation'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -73,6 +73,20 @@ def dashboard():
 def logout():
     session.pop('user_id', None)
     return redirect('/login')
+
+# NUEVO: Ruta de contacto
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        telefono = request.form['telefono']
+        email = request.form['email']
+        mensaje = request.form['mensaje']
+        # Aquí puedes procesar los datos: enviar email o guardar en base de datos
+        print(f"Mensaje recibido de {nombre} ({email}, {telefono}): {mensaje}")
+        flash('Tu mensaje ha sido enviado correctamente')
+        return redirect(url_for('home'))
+    return render_template('contact.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -4,25 +4,114 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - MovesLocation</title>
-  <style>
-    body { font-family: Arial, sans-serif; background: #f4f6f8; padding: 2rem; }
-    header { background: #1e3a8a; color: white; padding: 1rem 2rem; border-radius: 8px; }
-    a { color: white; text-decoration: none; margin-left: 1rem; }
-    .card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 1rem; }
-    input, button { width: 100%; padding: 0.6rem; margin-top: 0.8rem; }
-    button { background: #1e3a8a; color: white; border: none; cursor: pointer; border-radius: 4px; }
-    button:hover { background: #162e6f; }
-  </style>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-  <header>
-    <h1>Dashboard MovesLocation<a href="/logout">Cerrar sesión</a></h1>
+<body class="dark-mode dashboard-page">
+  <!-- Header del dashboard -->
+  <header class="dashboard-header">
+    <div class="logo">MovesLocation</div>
+    <nav class="dashboard-nav">
+      <a href="#overview" class="nav-item active" onclick="showDashboardSection('overview')">
+        <span class="nav-icon">📊</span>
+        <span>Resumen</span>
+      </a>
+      <a href="#documents" class="nav-item" onclick="showDashboardSection('documents')">
+        <span class="nav-icon">📄</span>
+        <span>Documentos</span>
+      </a>
+      <a href="#process" class="nav-item" onclick="showDashboardSection('process')">
+        <span class="nav-icon">🔄</span>
+        <span>Mi Proceso</span>
+      </a>
+      <a href="#messages" class="nav-item" onclick="showDashboardSection('messages')">
+        <span class="nav-icon">💬</span>
+        <span>Mensajes</span>
+        <span class="badge">3</span>
+      </a>
+    </nav>
+    <div class="header-actions">
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch">
+          <input type="checkbox" id="theme-toggle" checked>
+          <span class="slider">
+            <span class="icon sun">☀️</span>
+            <span class="icon moon">🌙</span>
+          </span>
+        </label>
+      </div>
+      <div class="user-menu">
+        <button class="user-avatar" onclick="toggleUserMenu()">
+          <span>JP</span>
+        </button>
+        <div class="user-dropdown" id="user-dropdown">
+          <div class="dropdown-header">
+            <p class="user-name">Juan Pérez</p>
+            <p class="user-email">juan@email.com</p>
+          </div>
+          <a href="#profile" class="dropdown-item">
+            <span>👤</span> Mi Perfil
+          </a>
+          <a href="#settings" class="dropdown-item">
+            <span>⚙️</span> Configuración
+          </a>
+          <a href="#help" class="dropdown-item">
+            <span>❓</span> Ayuda
+          </a>
+          <hr class="dropdown-divider">
+          <a href="/logout" class="dropdown-item logout">
+            <span>🚪</span> Cerrar Sesión
+          </a>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <div class="card">
-    <h2>Bienvenido al panel de usuario</h2>
-    <p>Aquí podrás ver tus documentos, procesos migratorios y planes contratados.</p>
-    <!-- Secciones de subida de documentos y procesos se agregarán aquí -->
-  </div>
-</body>
-</html>
+  <main class="dashboard-main">
+    <!-- Sección: Resumen -->
+    <section id="overview" class="dashboard-section">
+      <div class="section-header">
+        <h1>Bienvenido de nuevo, Juan 👋</h1>
+        <p>Aquí está el resumen de tu proceso migratorio</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📄</div>
+          <div class="stat-content">
+            <p class="stat-label">Documentos Subidos</p>
+            <h3 class="stat-value">8</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">✅</div>
+          <div class="stat-content">
+            <p class="stat-label">Documentos Aprobados</p>
+            <h3 class="stat-value">5</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-content">
+            <p class="stat-label">En Revisión</p>
+            <h3 class="stat-value">3</h3>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">📅</div>
+          <div class="stat-content">
+            <p class="stat-label">Próxima Cita</p>
+            <h3 class="stat-value">15 Ene</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado del Proceso -->
+      <div class="
+

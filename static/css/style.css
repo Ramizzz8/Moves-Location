@@ -1,0 +1,492 @@
+/* ============================================
+   VARIABLES DE COLOR Y FUENTES
+   ============================================ */
+:root {
+    /* Colores Modo Oscuro */
+    --dark-bg: #1a1a1a;
+    --dark-text: #e0e0e0;
+    --dark-secondary-bg: #2a2a2a;
+    --dark-header-bg-transparent: rgba(26, 26, 26, 0.8);
+    --dark-liquid-button-bg: rgba(255, 255, 255, 0.08);
+    --dark-liquid-button-hover-bg: rgba(255, 255, 255, 0.15);
+    --dark-liquid-button-border: rgba(255, 255, 255, 0.2);
+    --dark-border: rgba(255, 255, 255, 0.1);
+    --dark-card-hover: rgba(255, 255, 255, 0.05);
+
+    /* Colores Modo Claro */
+    --light-bg: #f4f6f8;
+    --light-text: #333;
+    --light-secondary-bg: #ffffff;
+    --light-header-bg-transparent: rgba(255, 255, 255, 0.8);
+    --light-liquid-button-bg: rgba(0, 0, 0, 0.05);
+    --light-liquid-button-hover-bg: rgba(0, 0, 0, 0.1);
+    --light-liquid-button-border: rgba(0, 0, 0, 0.15);
+    --light-border: rgba(0, 0, 0, 0.1);
+    --light-card-hover: rgba(0, 0, 0, 0.02);
+
+    /* Colores de Acento */
+    --accent-color: #1e3a8a;
+    --accent-hover: #162e6f;
+    --accent-light: #3b82f6;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+
+    /* Fuentes */
+    --body-font-family: 'Inter', Arial, sans-serif;
+    --heading-font-family: 'Montserrat', sans-serif;
+}
+
+/* ============================================
+   ESTILOS GENERALES
+   ============================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--body-font-family);
+    line-height: 1.6;
+    transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+
+ul {
+    list-style: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--heading-font-family);
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+/* ============================================
+   MODO OSCURO
+   ============================================ */
+body.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+body.dark-mode header {
+    background-color: var(--dark-header-bg-transparent);
+    border-bottom: 1px solid var(--dark-border);
+}
+
+/* ============================================
+   MODO CLARO
+   ============================================ */
+body.light-mode {
+    background-color: var(--light-bg);
+    color: var(--light-text);
+}
+
+body.light-mode header {
+    background-color: var(--light-header-bg-transparent);
+    border-bottom: 1px solid var(--light-border);
+}
+
+/* ============================================
+   HEADER Y NAVEGACIÓN
+   ============================================ */
+header {
+    width: 100%;
+    padding: 1rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: background-color 0.5s ease-in-out, border-color 0.5s ease-in-out;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    font-family: var(--heading-font-family);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+/* ============================================
+   BOTONES LIQUID GLASS
+   ============================================ */
+.liquid-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease-in-out;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    cursor: pointer;
+    border: 1px solid transparent;
+    font-family: var(--body-font-family);
+}
+
+body.dark-mode .liquid-button {
+    background: var(--dark-liquid-button-bg);
+    border: 1px solid var(--dark-liquid-button-border);
+    color: var(--dark-text);
+}
+
+body.dark-mode .liquid-button:hover {
+    background: var(--dark-liquid-button-hover-bg);
+    color: var(--accent-light);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+body.light-mode .liquid-button {
+    background: var(--light-liquid-button-bg);
+    border: 1px solid var(--light-liquid-button-border);
+    color: var(--light-text);
+}
+
+body.light-mode .liquid-button:hover {
+    background: var(--light-liquid-button-hover-bg);
+    color: var(--accent-color);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Botón Primario */
+.liquid-button.primary {
+    background: var(--accent-color);
+    color: white;
+    border: 1px solid var(--accent-color);
+}
+
+.liquid-button.primary:hover {
+    background: var(--accent-hover);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(30, 58, 138, 0.4);
+}
+
+/* Tamaños de botones */
+.liquid-button.large {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+}
+
+.liquid-button.full-width {
+    width: 100%;
+}
+
+/* ============================================
+   SWITCH DE TEMA
+   ============================================ */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 70px;
+    height: 34px;
+}
+
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--dark-liquid-button-bg);
+    border: 1px solid var(--dark-liquid-button-border);
+    transition: .4s ease-in-out;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 34px;
+}
+
+body.light-mode .slider {
+    background-color: var(--light-liquid-button-bg);
+    border: 1px solid var(--light-liquid-button-border);
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 3px;
+    background-color: var(--accent-color);
+    transition: .4s ease-in-out;
+    border-radius: 50%;
+}
+
+input:checked + .slider:before {
+    transform: translateX(36px);
+}
+
+.slider .icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    transition: opacity 0.3s ease;
+}
+
+.slider .sun {
+    left: 8px;
+    opacity: 0;
+}
+
+.slider .moon {
+    right: 8px;
+    opacity: 1;
+}
+
+input:checked + .slider .sun {
+    opacity: 1;
+}
+
+input:checked + .slider .moon {
+    opacity: 0;
+}
+
+body.light-mode .slider .icon {
+    filter: brightness(0.7);
+}
+
+/* ============================================
+   CONTENIDO PRINCIPAL
+   ============================================ */
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 5%;
+}
+
+section {
+    padding: 4rem 0;
+}
+
+section.hidden {
+    display: none;
+}
+
+h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: var(--accent-color);
+    text-align: center;
+}
+
+h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+p {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    opacity: 0.85;
+}
+
+/* ============================================
+   SECCIÓN HERO
+   ============================================ */
+.hero-section {
+    text-align: center;
+    padding: 6rem 0;
+}
+
+.hero-subtitle {
+    font-size: 1.3rem;
+    max-width: 700px;
+    margin: 0 auto 3rem auto;
+    opacity: 0.9;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 5rem;
+    flex-wrap: wrap;
+}
+
+/* ============================================
+   GRID DE BENEFICIOS
+   ============================================ */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 4rem;
+}
+
+.benefit-card {
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    text-align: center;
+    transition: all 0.4s ease-in-out;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+body.dark-mode .benefit-card {
+    background: var(--dark-liquid-button-bg);
+    border: 1px solid var(--dark-liquid-button-border);
+}
+
+body.light-mode .benefit-card {
+    background: var(--light-secondary-bg);
+    border: 1px solid var(--light-border);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.benefit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+}
+
+body.light-mode .benefit-card:hover {
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+.benefit-icon {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+.benefit-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+}
+
+.benefit-card p {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* ============================================
+   GRID DE PLANES
+   ============================================ */
+.section-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    opacity: 0.8;
+    margin-bottom: 4rem;
+}
+
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+
+.plan-card {
+    padding: 3rem 2rem;
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    transition: all 0.4s ease-in-out;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+body.dark-mode .plan-card {
+    background: var(--dark-liquid-button-bg);
+    border: 1px solid var(--dark-liquid-button-border);
+}
+
+body.light-mode .plan-card {
+    background: var(--light-secondary-bg);
+    border: 1px solid var(--light-border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.plan-card.featured {
+    transform: scale(1.05);
+    border-color: var(--accent-color);
+}
+
+body.dark-mode .plan-card.featured {
+    background: var(--dark-secondary-bg);
+    border: 2px solid var(--accent-color);
+}
+
+body.light-mode .plan-card.featured {
+    border: 2px solid var(--accent-color);
+    box-shadow: 0 8px 24px rgba(30, 58, 138, 0.15);
+}
+
+.plan-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+}
+
+.plan-card.featured:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.plan-badge {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+body.dark-mode .plan-badge {
+    background: var(--dark-liquid-button-hover-bg);
+    color: var
+}

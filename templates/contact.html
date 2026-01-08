@@ -3,28 +3,141 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contactanos - MovesLocation</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-  <style>
-    body { font-family: Arial, sans-serif; background: #fffaf0; color: #4a2c2a; padding: 2rem; }
-    .card { max-width: 600px; margin: auto; background: #fff3e0; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    input, textarea, button { width: 100%; padding: 0.8rem; margin-top: 1rem; border-radius: 4px; border: 1px solid #ccc; }
-    button { background: #ff4500; color: white; border: none; cursor: pointer; }
-    button:hover { background: #ff8c00; }
-  </style>
+  <title>Contáctanos - MovesLocation</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="dark-mode">
+  <!-- Header con navegación -->
+  <header>
+    <a href="/" class="logo">MovesLocation</a>
+    <nav>
+      <div class="nav-links">
+        <a href="/" class="liquid-button">Inicio</a>
+        <a href="/#plans" class="liquid-button">Planes</a>
+        <a href="/contact" class="liquid-button">Contacto</a>
+        <a href="/login" class="liquid-button primary">Iniciar Sesión</a>
+      </div>
+      <!-- Switch de modo oscuro/claro -->
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch">
+          <input type="checkbox" id="theme-toggle" checked>
+          <span class="slider">
+            <span class="icon sun">☀️</span>
+            <span class="icon moon">🌙</span>
+          </span>
+        </label>
+      </div>
+    </nav>
+  </header>
 
-<div class="card">
-  <h2>Contactanos</h2>
-  <form method="POST" action="/contact">
-    <input type="text" name="nombre" placeholder="Nombre completo" required />
-    <input type="tel" name="telefono" placeholder="Número de teléfono" required />
-    <input type="email" name="email" placeholder="Correo electrónico" required />
-    <textarea name="mensaje" placeholder="Describe tu caso o interés" rows="5" required></textarea>
-    <button type="submit">Enviar</button>
-  </form>
-</div>
+  <main>
+    <section class="contact-section">
+      <h1>Contáctanos</h1>
+      <p class="section-subtitle">¿Tienes dudas? Estamos aquí para ayudarte en tu proceso migratorio</p>
+      
+      <div class="contact-container">
+        <!-- Formulario de contacto -->
+        <div class="contact-form-wrapper">
+          <form method="POST" action="/contact" class="contact-form">
+            <div class="form-group">
+              <label for="nombre">Nombre completo</label>
+              <input 
+                type="text" 
+                id="nombre" 
+                name="nombre" 
+                placeholder="Juan Pérez" 
+                required 
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                placeholder="juan@ejemplo.com" 
+                required 
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="telefono">Teléfono</label>
+              <input 
+                type="tel" 
+                id="telefono" 
+                name="telefono" 
+                placeholder="+34 600 000 000" 
+                required 
+              />
+            </div>
+            
+            <div class="form-group">
+              <label for="mensaje">Describe tu caso o interés</label>
+              <textarea 
+                id="mensaje" 
+                name="mensaje" 
+                rows="6" 
+                placeholder="Cuéntanos cómo podemos ayudarte con tu proceso migratorio..." 
+                required
+              ></textarea>
+            </div>
+            
+            <button type="submit" class="liquid-button primary large full-width">
+              Enviar Mensaje
+            </button>
+          </form>
+        </div>
 
+        <!-- Información de contacto -->
+        <div class="contact-info">
+          <div class="info-card">
+            <div class="info-icon">📧</div>
+            <h4>Email</h4>
+            <p>info@moveslocation.com</p>
+          </div>
+          
+          <div class="info-card">
+            <div class="info-icon">📞</div>
+            <h4>Teléfono</h4>
+            <p>+34 900 123 456</p>
+          </div>
+          
+          <div class="info-card">
+            <div class="info-icon">🕐</div>
+            <h4>Horario</h4>
+            <p>Lun - Vie: 9:00 - 18:00</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 MovesLocation. Todos los derechos reservados.</p>
+    <p>Tu aliado en el proceso migratorio.</p>
+  </footer>
+
+  <script>
+    // Toggle de tema oscuro/claro
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    themeToggle.addEventListener('change', () => {
+      if (themeToggle.checked) {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+      } else {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+      }
+    });
+  </script>
 </body>
 </html>
+
+

@@ -316,6 +316,7 @@ h1 {
     font-size: 3.5rem;
     margin-bottom: 1rem;
     color: var(--accent-color);
+    text-align: center;
 }
 
 h2 {
@@ -488,5 +489,10 @@ body.light-mode .plan-card.featured {
 
 body.dark-mode .plan-badge {
     background: var(--dark-liquid-button-hover-bg);
-    color: var
+    color: var(--dark-text);
+}
+
+body.light-mode .plan-badge {
+    background: var(--light-liquid-button-bg);
+    color: var(--light-text);
 }

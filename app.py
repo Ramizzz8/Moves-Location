@@ -13,8 +13,13 @@ db = SQLAlchemy(app)
 
 # Modelos
 class User(db.Model):
+    __tablename__ = 'user'  # <-- agrega esta línea
     id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    phone = db.Column(db.String(20))
+    country = db.Column(db.String(50))
     password = db.Column(db.String(200), nullable=False)
 
 # Crear tablas
@@ -44,23 +49,45 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        # Obtener todos los campos del formulario
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
         email = request.form['email']
+        phone = request.form.get('phone')  # opcional
+        country = request.form['country']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
+
+        # Validaciones
         if password != confirm_password:
             flash('Las contraseñas no coinciden')
             return redirect('/register')
+
         if User.query.filter_by(email=email).first():
             flash('El correo ya está registrado')
             return redirect('/register')
+
+        # Hashear contraseña
         hashed_password = generate_password_hash(password)
-        new_user = User(email=email, password=hashed_password)
+
+        # Crear nuevo usuario con todos los datos
+        new_user = User(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone=phone,
+            country=country,
+            password=hashed_password
+        )
+
         db.session.add(new_user)
         db.session.commit()
+
+        # Iniciar sesión automáticamente
         session['user_id'] = new_user.id
         return redirect('/dashboard')
-    return render_template('register.html')
 
+    return render_template('register.html')
 # Dashboard
 @app.route('/dashboard')
 def dashboard():

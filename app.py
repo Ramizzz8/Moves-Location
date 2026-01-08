@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail, Message
 import pymysql
 
 app = Flask(__name__)
@@ -8,12 +9,19 @@ app.secret_key = 'clave_secreta_segura'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://movesadmin:Movesadmin1234$@localhost/MovesLocation'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'   # Cambia según tu proveedor
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'tu_correo@gmail.com'  # Tu correo
+app.config['MAIL_PASSWORD'] = 'tu_contraseña_de_app' # Contraseña o App Password
 
 db = SQLAlchemy(app)
+mail = Mail(app)
 
 # Modelos
 class User(db.Model):
-    __tablename__ = 'user'  # <-- agrega esta línea
+    __tablename__ = 'user'  
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
@@ -106,13 +114,24 @@ def logout():
 def contact():
     if request.method == 'POST':
         nombre = request.form['nombre']
-        telefono = request.form['telefono']
         email = request.form['email']
+        telefono = request.form['telefono']
         mensaje = request.form['mensaje']
-        # Aquí puedes procesar los datos: enviar email o guardar en base de datos
-        print(f"Mensaje recibido de {nombre} ({email}, {telefono}): {mensaje}")
-        flash('Tu mensaje ha sido enviado correctamente')
-        return redirect(url_for('home'))
+
+        try:
+            msg = Message(
+                subject=f"Nuevo mensaje de contacto de {nombre}",
+                sender=app.config['MAIL_USERNAME'],
+                recipients=['info@moveslocation.com'],  # Aquí tu correo de destino
+                body=f"Nombre: {nombre}\nEmail: {email}\nTeléfono: {telefono}\n\nMensaje:\n{mensaje}"
+            )
+            mail.send(msg)
+            flash('¡Mensaje enviado correctamente!', 'success')
+        except Exception as e:
+            flash(f'Error al enviar el mensaje: {e}', 'danger')
+
+        return redirect(url_for('contact'))
+
     return render_template('contact.html')
 
 if __name__ == '__main__':

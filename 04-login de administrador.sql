@@ -1,0 +1,10 @@
+INSERT INTO user (first_name, last_name, email, phone, country, password, role)
+VALUES (
+  'Admin',
+  'System',
+  'admin@moveslocation.com',
+  '+34 600 00 00 00',
+  'ES',
+  'scrypt:32768:8:1$pghEha0UqRTjqb5q$3e837862aa27438919d650e5ecb9a80b74ab914c8837ae65aa6726b05030abf90827cec392216e92d8a8dd6c3bb5a6c9631c53fd7c8e35ad7e38fd3b3f9347f0',
+  'admin'
+);

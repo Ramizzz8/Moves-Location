@@ -1,0 +1,32 @@
+<h2>Clientes recientes</h2>
+<ul>
+{% for c in clientes %}
+    <li>{{ c.first_name }} {{ c.last_name }} - {{ c.email }}</li>
+{% endfor %}
+</ul>
+
+<h2>Procesos</h2>
+<table>
+<tr>
+    <th>Cliente</th>
+    <th>Estado</th>
+    <th>Actualizar</th>
+</tr>
+{% for p in procesos %}
+<tr>
+    <td>{{ p.first_name }} {{ p.last_name }}</td>
+    <td>{{ p.status }}</td>
+    <td>
+        <form method="POST" action="/admin/process/{{ p.id }}/status">
+            <select name="status">
+                <option value="Pending" {% if p.status == 'Pending' %}selected{% endif %}>Pendiente</option>
+                <option value="In Review" {% if p.status == 'In Review' %}selected{% endif %}>En Revisión</option>
+                <option value="Approved" {% if p.status == 'Approved' %}selected{% endif %}>Aprobado</option>
+                <option value="Rejected" {% if p.status == 'Rejected' %}selected{% endif %}>Rechazado</option>
+            </select>
+            <button type="submit">Actualizar</button>
+        </form>
+    </td>
+</tr>
+{% endfor %}
+</table>

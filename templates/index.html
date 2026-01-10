@@ -3,27 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Servicios Migratorios - MovesLocation</title>
+  <meta name="description" content="MovesLocation - Tu aliado en el proceso migratorio. Gestiona documentos, seguimiento y asesoría legal.">
+  <title>MovesLocation - Servicios Migratorios</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
-<body class="dark-mode">
-  <!-- Header con navegación liquid glass -->
+<body class="light-mode">
+  
+  <!-- Header con navegación -->
   <header>
-    <div class="logo">MovesLocation</div>
+    <a href="/" class="logo">MovesLocation</a>
     <nav>
       <div class="nav-links">
         <a href="#home" class="liquid-button" onclick="showSection('home')">Inicio</a>
         <a href="#plans" class="liquid-button" onclick="showSection('plans')">Planes</a>
-        <a href="{{ url_for('contact') }}" class="liquid-button" onclick="showSection('contact')">Contacto</a>
-        <a href="{{ url_for('login') }}" class="liquid-button primary">Iniciar Sesión</a>
+        <a href="#contact" class="liquid-button" onclick="showSection('contact')">Contacto</a>
+        <a href="/login" class="liquid-button primary">Iniciar Sesión</a>
       </div>
-      <!-- Switch de modo oscuro/claro -->
       <div class="theme-switch-wrapper">
         <label class="theme-switch">
-          <input type="checkbox" id="theme-toggle" checked>
+          <input type="checkbox" id="theme-toggle">
           <span class="slider">
             <span class="icon sun">☀️</span>
             <span class="icon moon">🌙</span>
@@ -38,28 +39,32 @@
     <section id="home" class="hero-section">
       <h1>Bienvenido a MovesLocation</h1>
       <p class="hero-subtitle">Tu aliado en el proceso migratorio. Te ayudamos a gestionar tu documentación, seguimiento y asesoría legal de forma simple y segura.</p>
+      
       <div class="cta-buttons">
         <a href="/register" class="liquid-button primary large">Comenzar Ahora</a>
-        <a href="#plans" class="liquid-button large" onclick="showSection('plans')">Ver Planes</a>
+        <a href="#plans" class="liquid-button outline large" onclick="showSection('plans')">Ver Planes</a>
       </div>
 
-      <!-- Cards de beneficios -->
+      <!-- Grid de beneficios -->
       <div class="benefits-grid">
         <div class="benefit-card">
           <div class="benefit-icon">📄</div>
           <h3>Gestión de Documentos</h3>
           <p>Sube, organiza y gestiona todos tus documentos migratorios en un solo lugar seguro.</p>
         </div>
+        
         <div class="benefit-card">
           <div class="benefit-icon">🔍</div>
           <h3>Seguimiento en Tiempo Real</h3>
           <p>Monitorea el estado de tu proceso migratorio con actualizaciones instantáneas.</p>
         </div>
+        
         <div class="benefit-card">
           <div class="benefit-icon">👨‍⚖️</div>
           <h3>Asesoría Legal</h3>
           <p>Accede a expertos en migración que te guiarán en cada paso del proceso.</p>
         </div>
+        
         <div class="benefit-card">
           <div class="benefit-icon">🌍</div>
           <h3>Soporte Multiidioma</h3>
@@ -84,14 +89,14 @@
             <span class="period">/mes</span>
           </div>
           <ul class="plan-features">
-            <li>✓ Consulta inicial gratuita</li>
-            <li>✓ Revisión de documentos</li>
-            <li>✓ Orientación básica</li>
-            <li>✓ Soporte por email</li>
-            <li>✗ Gestión completa</li>
-            <li>✗ Atención prioritaria</li>
+            <li><span class="check">✓</span> Consulta inicial gratuita</li>
+            <li><span class="check">✓</span> Revisión de documentos</li>
+            <li><span class="check">✓</span> Orientación básica</li>
+            <li><span class="check">✓</span> Soporte por email</li>
+            <li><span class="cross">✗</span> Gestión completa</li>
+            <li><span class="cross">✗</span> Atención prioritaria</li>
           </ul>
-          <button class="liquid-button primary">Seleccionar Plan</button>
+          <button class="liquid-button primary full-width">Seleccionar Plan</button>
         </div>
 
         <!-- Plan Premium -->
@@ -104,14 +109,14 @@
             <span class="period">/mes</span>
           </div>
           <ul class="plan-features">
-            <li>✓ Todo lo del plan Básico</li>
-            <li>✓ Gestión completa del proceso</li>
-            <li>✓ Seguimiento personalizado</li>
-            <li>✓ Soporte 24/7</li>
-            <li>✓ Preparación de entrevistas</li>
-            <li>✓ Atención prioritaria</li>
+            <li><span class="check">✓</span> Todo lo del plan Básico</li>
+            <li><span class="check">✓</span> Gestión completa del proceso</li>
+            <li><span class="check">✓</span> Seguimiento personalizado</li>
+            <li><span class="check">✓</span> Soporte 24/7</li>
+            <li><span class="check">✓</span> Preparación de entrevistas</li>
+            <li><span class="check">✓</span> Atención prioritaria</li>
           </ul>
-          <button class="liquid-button primary">Seleccionar Plan</button>
+          <button class="liquid-button primary full-width">Seleccionar Plan</button>
         </div>
 
         <!-- Plan Personalizado -->
@@ -124,14 +129,14 @@
             <span class="period">/mes</span>
           </div>
           <ul class="plan-features">
-            <li>✓ Todo lo del plan Premium</li>
-            <li>✓ Abogado dedicado</li>
-            <li>✓ Estrategia personalizada</li>
-            <li>✓ Reuniones ilimitadas</li>
-            <li>✓ Gestión de casos complejos</li>
-            <li>✓ Garantía de respuesta</li>
+            <li><span class="check">✓</span> Todo lo del plan Premium</li>
+            <li><span class="check">✓</span> Abogado dedicado</li>
+            <li><span class="check">✓</span> Estrategia personalizada</li>
+            <li><span class="check">✓</span> Reuniones ilimitadas</li>
+            <li><span class="check">✓</span> Gestión de casos complejos</li>
+            <li><span class="check">✓</span> Garantía de respuesta</li>
           </ul>
-          <button class="liquid-button primary">Contactar</button>
+          <button class="liquid-button primary full-width">Contactar</button>
         </div>
       </div>
     </section>
@@ -164,7 +169,7 @@
               <textarea id="contact-message" rows="6" placeholder="Cuéntanos cómo podemos ayudarte..." required></textarea>
             </div>
             
-            <button type="submit" class="liquid-button primary large">Enviar Mensaje</button>
+            <button type="submit" class="liquid-button primary large full-width">Enviar Mensaje</button>
           </form>
         </div>
 
@@ -198,16 +203,7 @@
   </footer>
 
   <script>
-    // Función para mostrar secciones
-    function showSection(id) {
-      document.querySelectorAll('main section').forEach((s) => s.classList.add('hidden'));
-      document.getElementById(id).classList.remove('hidden');
-      
-      // Scroll suave al inicio de la sección
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Toggle de tema oscuro/claro
+    // Toggle de tema
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
@@ -221,18 +217,19 @@
       }
     });
 
+    // Mostrar secciones
+    function showSection(id) {
+      document.querySelectorAll('main section').forEach((s) => s.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     // Manejo del formulario de contacto
     function handleContactSubmit(event) {
       event.preventDefault();
-      
       const name = document.getElementById('contact-name').value;
       const email = document.getElementById('contact-email').value;
-      const message = document.getElementById('contact-message').value;
-      
-      // Aquí iría la lógica para enviar el formulario
       alert(`Gracias ${name}, hemos recibido tu mensaje. Te contactaremos pronto a ${email}.`);
-      
-      // Limpiar formulario
       event.target.reset();
     }
 

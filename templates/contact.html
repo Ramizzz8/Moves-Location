@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contáctanos para resolver tus dudas sobre servicios migratorios.">
   <title>Contáctanos - MovesLocation</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
-<body class="dark-mode">
+<body class="light-mode">
+  
   <!-- Header con navegación -->
   <header>
     <a href="/" class="logo">MovesLocation</a>
@@ -20,10 +22,9 @@
         <a href="/contact" class="liquid-button">Contacto</a>
         <a href="/login" class="liquid-button primary">Iniciar Sesión</a>
       </div>
-      <!-- Switch de modo oscuro/claro -->
       <div class="theme-switch-wrapper">
         <label class="theme-switch">
-          <input type="checkbox" id="theme-toggle" checked>
+          <input type="checkbox" id="theme-toggle">
           <span class="slider">
             <span class="icon sun">☀️</span>
             <span class="icon moon">🌙</span>
@@ -41,7 +42,7 @@
       <div class="contact-container">
         <!-- Formulario de contacto -->
         <div class="contact-form-wrapper">
-          <form method="POST" action="/contact" class="contact-form">
+          <form method="POST" action="/contact" class="contact-form" onsubmit="handleContactSubmit(event)">
             <div class="form-group">
               <label for="nombre">Nombre completo</label>
               <input 
@@ -50,6 +51,7 @@
                 name="nombre" 
                 placeholder="Juan Pérez" 
                 required 
+                autocomplete="name"
               />
             </div>
             
@@ -61,6 +63,7 @@
                 name="email" 
                 placeholder="juan@ejemplo.com" 
                 required 
+                autocomplete="email"
               />
             </div>
             
@@ -72,6 +75,7 @@
                 name="telefono" 
                 placeholder="+34 600 000 000" 
                 required 
+                autocomplete="tel"
               />
             </div>
             
@@ -98,19 +102,43 @@
             <div class="info-icon">📧</div>
             <h4>Email</h4>
             <p>info@moveslocation.com</p>
+            <a href="mailto:info@moveslocation.com" class="liquid-button outline">Enviar Email</a>
           </div>
           
           <div class="info-card">
             <div class="info-icon">📞</div>
             <h4>Teléfono</h4>
             <p>+34 900 123 456</p>
+            <a href="tel:+34900123456" class="liquid-button outline">Llamar Ahora</a>
           </div>
           
           <div class="info-card">
             <div class="info-icon">🕐</div>
-            <h4>Horario</h4>
-            <p>Lun - Vie: 9:00 - 18:00</p>
+            <h4>Horario de Atención</h4>
+            <p>Lunes - Viernes</p>
+            <p>9:00 AM - 6:00 PM</p>
           </div>
+
+          <div class="info-card">
+            <div class="info-icon">📍</div>
+            <h4>Ubicación</h4>
+            <p>Madrid, España</p>
+            <p>Calle Principal 123</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección adicional de FAQ o información -->
+      <div class="contact-extra">
+        <h3>¿Necesitas ayuda inmediata?</h3>
+        <p>Si tu caso es urgente, puedes contactarnos directamente por WhatsApp o agendar una videollamada con uno de nuestros asesores.</p>
+        <div class="cta-buttons">
+          <a href="https://wa.me/34900123456" target="_blank" class="liquid-button primary">
+            💬 WhatsApp
+          </a>
+          <a href="/schedule" class="liquid-button outline">
+            📅 Agendar Cita
+          </a>
         </div>
       </div>
     </section>
@@ -123,7 +151,7 @@
   </footer>
 
   <script>
-    // Toggle de tema oscuro/claro
+    // Toggle de tema
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
@@ -136,8 +164,30 @@
         body.classList.add('light-mode');
       }
     });
+
+    // Manejo del formulario de contacto
+    function handleContactSubmit(event) {
+      event.preventDefault();
+      
+      const nombre = document.getElementById('nombre').value;
+      const email = document.getElementById('email').value;
+      const telefono = document.getElementById('telefono').value;
+      const mensaje = document.getElementById('mensaje').value;
+      
+      // Aquí iría la lógica para enviar el formulario al backend
+      console.log('Contact form submitted:', { nombre, email, telefono, mensaje });
+      
+      // Simulación de envío exitoso
+      alert(`Gracias ${nombre}, hemos recibido tu mensaje. Te contactaremos pronto a ${email}.`);
+      
+      // Limpiar formulario
+      event.target.reset();
+      
+      return false;
+    }
   </script>
 </body>
 </html>
+
 
 

@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Regístrate en MovesLocation y comienza tu proceso migratorio.">
   <title>Registro - MovesLocation</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
-<body class="dark-mode auth-page">
+<body class="light-mode auth-page">
+  
   <!-- Header minimalista -->
   <header class="auth-header">
     <a href="/" class="logo">MovesLocation</a>
     <div class="theme-switch-wrapper">
       <label class="theme-switch">
-        <input type="checkbox" id="theme-toggle" checked>
+        <input type="checkbox" id="theme-toggle">
         <span class="slider">
           <span class="icon sun">☀️</span>
           <span class="icon moon">🌙</span>
@@ -26,7 +28,7 @@
 
   <main class="auth-main">
     <div class="auth-container">
-      <!-- Card de registro con efecto liquid glass -->
+      <!-- Card de registro -->
       <div class="auth-card register-card">
         <div class="auth-header-content">
           <h1>Crea tu cuenta</h1>
@@ -127,6 +129,14 @@
               <option value="BO">Bolivia</option>
               <option value="UY">Uruguay</option>
               <option value="PY">Paraguay</option>
+              <option value="GT">Guatemala</option>
+              <option value="HN">Honduras</option>
+              <option value="SV">El Salvador</option>
+              <option value="NI">Nicaragua</option>
+              <option value="CR">Costa Rica</option>
+              <option value="PA">Panamá</option>
+              <option value="DO">República Dominicana</option>
+              <option value="CU">Cuba</option>
               <option value="OTHER">Otro</option>
             </select>
           </div>
@@ -150,15 +160,17 @@
         <div class="social-login">
           <button class="liquid-button social-button" onclick="registerWithGoogle()">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
-              <path d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+              <path d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z" fill="#4285F4"/>
+              <path d="M10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20z" fill="#34A853"/>
+              <path d="M4.32 11.98c-.22-.59-.35-1.22-.35-1.98s.13-1.39.35-1.98V5.5H1.07C.39 6.85 0 8.35 0 10s.39 3.15 1.07 4.5l3.25-2.52z" fill="#FBBC05"/>
+              <path d="M10 3.87c1.45 0 2.76.5 3.78 1.48l2.84-2.84C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.5l3.25 2.52C5.12 5.61 7.36 3.87 10 3.87z" fill="#EA4335"/>
             </svg>
             Google
           </button>
           
           <button class="liquid-button social-button" onclick="registerWithFacebook()">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z"/>
+              <path d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" fill="#1877F2"/>
             </svg>
             Facebook
           </button>
@@ -172,7 +184,7 @@
   </main>
 
   <script>
-    // Toggle de tema oscuro/claro
+    // Toggle de tema
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
@@ -195,53 +207,56 @@
       const password = passwordInput.value;
       let strength = 0;
 
-      // Criterios de fortaleza
       if (password.length >= 8) strength++;
       if (password.match(/[a-z]+/)) strength++;
       if (password.match(/[A-Z]+/)) strength++;
       if (password.match(/[0-9]+/)) strength++;
       if (password.match(/[$@#&!]+/)) strength++;
 
-      // Actualizar barra de fortaleza
       strengthBar.style.width = (strength * 20) + '%';
       
-      // Colores según fortaleza
       if (strength <= 2) {
-        strengthBar.style.backgroundColor = '#ef4444';
+        strengthBar.style.backgroundColor = '#EF4444';
         strengthContainer.setAttribute('data-strength', 'weak');
       } else if (strength <= 3) {
-        strengthBar.style.backgroundColor = '#f59e0b';
+        strengthBar.style.backgroundColor = '#F59E0B';
         strengthContainer.setAttribute('data-strength', 'medium');
       } else {
-        strengthBar.style.backgroundColor = '#10b981';
+        strengthBar.style.backgroundColor = '#10B981';
         strengthContainer.setAttribute('data-strength', 'strong');
       }
     });
 
     // Validación del formulario
     function handleRegisterSubmit(event) {
+      event.preventDefault();
+      
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirm-password').value;
 
       if (password !== confirmPassword) {
-        event.preventDefault();
         alert('Las contraseñas no coinciden. Por favor, verifica.');
         return false;
       }
 
-      // Aquí iría la lógica adicional de validación
-      return true;
+      // Aquí iría la lógica de registro
+      console.log('Register attempt');
+      
+      // Simulación de registro exitoso
+      // window.location.href = '/dashboard';
+      
+      return false;
     }
 
-    // Funciones de registro social (placeholder)
+    // Registro con Google
     function registerWithGoogle() {
       alert('Registro con Google - Funcionalidad en desarrollo');
     }
 
+    // Registro con Facebook
     function registerWithFacebook() {
       alert('Registro con Facebook - Funcionalidad en desarrollo');
     }
   </script>
 </body>
 </html>
-

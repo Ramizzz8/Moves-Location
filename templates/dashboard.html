@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Panel de usuario - Gestiona tu proceso migratorio en MovesLocation.">
   <title>Dashboard - MovesLocation</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
-<body class="dark-mode dashboard-page">
+<body class="light-mode dashboard-page">
+  
   <!-- Header del dashboard -->
   <header class="dashboard-header">
     <div class="logo">MovesLocation</div>
@@ -35,7 +37,7 @@
     <div class="header-actions">
       <div class="theme-switch-wrapper">
         <label class="theme-switch">
-          <input type="checkbox" id="theme-toggle" checked>
+          <input type="checkbox" id="theme-toggle">
           <span class="slider">
             <span class="icon sun">☀️</span>
             <span class="icon moon">🌙</span>
@@ -46,7 +48,7 @@
         <button class="user-avatar" onclick="toggleUserMenu()">
           <span>JP</span>
         </button>
-        <div class="user-dropdown" id="user-dropdown">
+        <div class="user-dropdown hidden" id="user-dropdown">
           <div class="dropdown-header">
             <p class="user-name">Juan Pérez</p>
             <p class="user-email">juan@email.com</p>
@@ -113,5 +115,253 @@
       </div>
 
       <!-- Estado del Proceso -->
-      <div class="
+      <div class="process-status-card">
+        <h2>Estado de tu Proceso</h2>
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: 60%;"></div>
+        </div>
+        <p class="progress-text">60% completado - En revisión de documentos</p>
+        
+        <div class="timeline">
+          <div class="timeline-item completed">
+            <div class="timeline-icon">✓</div>
+            <div class="timeline-content">
+              <h4>Registro Completado</h4>
+              <p>5 de enero, 2026</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item completed">
+            <div class="timeline-icon">✓</div>
+            <div class="timeline-content">
+              <h4>Documentos Enviados</h4>
+              <p>8 de enero, 2026</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item active">
+            <div class="timeline-icon">⏳</div>
+            <div class="timeline-content">
+              <h4>Revisión en Proceso</h4>
+              <p>En progreso</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-icon">○</div>
+            <div class="timeline-content">
+              <h4>Entrevista Programada</h4>
+              <p>Pendiente</p>
+            </div>
+          </div>
+          
+          <div class="timeline-item">
+            <div class="timeline-icon">○</div>
+            <div class="timeline-content">
+              <h4>Aprobación Final</h4>
+              <p>Pendiente</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones Rápidas -->
+      <div class="quick-actions">
+        <h2>Acciones Rápidas</h2>
+        <div class="actions-grid">
+          <button class="action-card" onclick="showDashboardSection('documents')">
+            <span class="action-icon">📤</span>
+            <span class="action-text">Subir Documento</span>
+          </button>
+          
+          <button class="action-card" onclick="showDashboardSection('messages')">
+            <span class="action-icon">💬</span>
+            <span class="action-text">Contactar Asesor</span>
+          </button>
+          
+          <button class="action-card">
+            <span class="action-icon">📅</span>
+            <span class="action-text">Agendar Cita</span>
+          </button>
+          
+          <button class="action-card">
+            <span class="action-icon">📊</span>
+            <span class="action-text">Ver Reporte</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección: Documentos -->
+    <section id="documents" class="dashboard-section hidden">
+      <div class="section-header">
+        <h1>Mis Documentos</h1>
+        <button class="liquid-button primary">
+          <span>📤</span> Subir Nuevo Documento
+        </button>
+      </div>
+
+      <div class="documents-grid">
+        <div class="document-card">
+          <div class="document-icon">📄</div>
+          <div class="document-info">
+            <h4>Pasaporte</h4>
+            <p>Subido el 5 de enero, 2026</p>
+            <span class="status-badge approved">Aprobado</span>
+          </div>
+        </div>
+
+        <div class="document-card">
+          <div class="document-icon">📄</div>
+          <div class="document-info">
+            <h4>Formulario de Solicitud</h4>
+            <p>Subido el 6 de enero, 2026</p>
+            <span class="status-badge approved">Aprobado</span>
+          </div>
+        </div>
+
+        <div class="document-card">
+          <div class="document-icon">📄</div>
+          <div class="document-info">
+            <h4>Certificado de Antecedentes</h4>
+            <p>Subido el 8 de enero, 2026</p>
+            <span class="status-badge pending">En Revisión</span>
+          </div>
+        </div>
+
+        <div class="document-card">
+          <div class="document-icon">📄</div>
+          <div class="document-info">
+            <h4>Comprobante de Domicilio</h4>
+            <p>Subido el 8 de enero, 2026</p>
+            <span class="status-badge pending">En Revisión</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección: Mi Proceso -->
+    <section id="process" class="dashboard-section hidden">
+      <div class="section-header">
+        <h1>Mi Proceso Migratorio</h1>
+      </div>
+
+      <div class="process-details-card">
+        <h3>Detalles del Proceso</h3>
+        <div class="detail-row">
+          <span class="detail-label">Tipo de Visa:</span>
+          <span class="detail-value">Visa de Trabajo</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">País de Destino:</span>
+          <span class="detail-value">España</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Fecha de Inicio:</span>
+          <span class="detail-value">5 de enero, 2026</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Estado Actual:</span>
+          <span class="detail-value">En Revisión de Documentos</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Asesor Asignado:</span>
+          <span class="detail-value">María González</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección: Mensajes -->
+    <section id="messages" class="dashboard-section hidden">
+      <div class="section-header">
+        <h1>Mensajes</h1>
+        <button class="liquid-button primary">
+          <span>✉️</span> Nuevo Mensaje
+        </button>
+      </div>
+
+      <div class="messages-list">
+        <div class="message-card unread">
+          <div class="message-avatar">MG</div>
+          <div class="message-content">
+            <div class="message-header">
+              <h4>María González</h4>
+              <span class="message-time">Hace 2 horas</span>
+            </div>
+            <p>Hola Juan, hemos revisado tu certificado de antecedentes y necesitamos una aclaración...</p>
+          </div>
+        </div>
+
+        <div class="message-card unread">
+          <div class="message-avatar">SYS</div>
+          <div class="message-content">
+            <div class="message-header">
+              <h4>Sistema</h4>
+              <span class="message-time">Hace 1 día</span>
+            </div>
+            <p>Tu documento "Comprobante de Domicilio" ha sido recibido y está en proceso de revisión.</p>
+          </div>
+        </div>
+
+        <div class="message-card">
+          <div class="message-avatar">MG</div>
+          <div class="message-content">
+            <div class="message-header">
+              <h4>María González</h4>
+              <span class="message-time">Hace 3 días</span>
+            </div>
+            <p>Bienvenido a MovesLocation. Soy tu asesora asignada y estaré acompañándote en todo el proceso.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Toggle de tema
+    const themeToggle = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    themeToggle.addEventListener('change', () => {
+      if (themeToggle.checked) {
+        body.classList.remove('light-mode');
+        body.classList.add('dark-mode');
+      } else {
+        body.classList.remove('dark-mode');
+        body.classList.add('light-mode');
+      }
+    });
+
+    // Mostrar secciones del dashboard
+    function showDashboardSection(sectionId) {
+      document.querySelectorAll('.dashboard-section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(sectionId).classList.remove('hidden');
+      
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      event.currentTarget.classList.add('active');
+    }
+
+    // Toggle del menú de usuario
+    function toggleUserMenu() {
+      const dropdown = document.getElementById('user-dropdown');
+      dropdown.classList.toggle('hidden');
+    }
+
+    // Cerrar dropdown al hacer click fuera
+    document.addEventListener('click', (e) => {
+      const userMenu = document.querySelector('.user-menu');
+      const dropdown = document.getElementById('user-dropdown');
+      
+      if (!userMenu.contains(e.target)) {
+        dropdown.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
+
 

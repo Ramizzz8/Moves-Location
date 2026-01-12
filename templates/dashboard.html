@@ -193,82 +193,118 @@
     </section>
 
     <!-- Sección: Documentos -->
-    <section id="documents" class="dashboard-section hidden">
-      <div class="section-header">
-        <h1>Mis Documentos</h1>
-        <button class="liquid-button primary">
-          <span>📤</span> Subir Nuevo Documento
-        </button>
+<!-- Sección: Documentos -->
+<section id="documents" class="dashboard-section hidden">
+  <div class="section-header">
+    <h1>Mis Documentos</h1>
+    <!-- Botón para abrir formulario -->
+    <button class="liquid-button primary" onclick="toggleUploadForm()">
+      <span>📤</span> Subir Nuevo Documento
+    </button>
+  </div>
+
+  <!-- Formulario de subida oculto inicialmente -->
+  <div id="upload-form-container" class="upload-form-container hidden">
+    <form action="/upload_document" method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="document_type">Tipo de Documento</label>
+        <select id="document_type" name="type_id" required>
+          <option value="">Selecciona el tipo de documento</option>
+          {% for dt in document_types %}
+            <option value="{{ dt.id }}">{{ dt.name }}</option>
+          {% endfor %}
+        </select>
       </div>
 
-      <div class="documents-grid">
-        <div class="document-card">
-          <div class="document-icon">📄</div>
-          <div class="document-info">
-            <h4>Pasaporte</h4>
-            <p>Subido el 5 de enero, 2026</p>
+      <div class="form-group">
+        <label for="document_file">Archivo</label>
+        <input type="file" id="document_file" name="file" required>
+      </div>
+
+      <button type="submit" class="liquid-button primary">Subir Documento</button>
+      <button type="button" class="liquid-button secondary" onclick="toggleUploadForm()">Cancelar</button>
+    </form>
+  </div>
+
+  <div class="documents-grid">
+    {% for doc in documents %}
+      <div class="document-card">
+        <div class="document-icon">📄</div>
+        <div class="document-info">
+          <h4>{{ doc.type_name }}</h4>
+          <p>Subido el {{ doc.uploaded_at.strftime('%d de %B, %Y') if doc.uploaded_at else 'N/A' }}</p>
+          {% if doc.status == 'approved' %}
             <span class="status-badge approved">Aprobado</span>
-          </div>
-        </div>
-
-        <div class="document-card">
-          <div class="document-icon">📄</div>
-          <div class="document-info">
-            <h4>Formulario de Solicitud</h4>
-            <p>Subido el 6 de enero, 2026</p>
-            <span class="status-badge approved">Aprobado</span>
-          </div>
-        </div>
-
-        <div class="document-card">
-          <div class="document-icon">📄</div>
-          <div class="document-info">
-            <h4>Certificado de Antecedentes</h4>
-            <p>Subido el 8 de enero, 2026</p>
+          {% elif doc.status == 'pending' %}
             <span class="status-badge pending">En Revisión</span>
-          </div>
-        </div>
-
-        <div class="document-card">
-          <div class="document-icon">📄</div>
-          <div class="document-info">
-            <h4>Comprobante de Domicilio</h4>
-            <p>Subido el 8 de enero, 2026</p>
-            <span class="status-badge pending">En Revisión</span>
-          </div>
+          {% else %}
+            <span class="status-badge">{{ doc.status }}</span>
+          {% endif %}
         </div>
       </div>
-    </section>
+    {% else %}
+      <p>No has subido documentos aún.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<script>
+  function toggleUploadForm() {
+    const formContainer = document.getElementById('upload-form-container');
+    formContainer.classList.toggle('hidden');
+  }
+</script>
+
+
+<script>
+  // Mostrar/ocultar formulario de subida
+  function toggleUploadForm() {
+    const container = document.getElementById('upload-form-container');
+    container.classList.toggle('hidden');
+  }
+</script>
+
 
     <!-- Sección: Mi Proceso -->
     <section id="process" class="dashboard-section hidden">
-      <div class="section-header">
-        <h1>Mi Proceso Migratorio</h1>
-      </div>
-
       <div class="process-details-card">
-        <h3>Detalles del Proceso</h3>
-        <div class="detail-row">
-          <span class="detail-label">Tipo de Visa:</span>
-          <span class="detail-value">Visa de Trabajo</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">País de Destino:</span>
-          <span class="detail-value">España</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Fecha de Inicio:</span>
-          <span class="detail-value">5 de enero, 2026</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Estado Actual:</span>
-          <span class="detail-value">En Revisión de Documentos</span>
-        </div>
-        <div class="detail-row">
-          <span class="detail-label">Asesor Asignado:</span>
-          <span class="detail-value">María González</span>
-        </div>
+  <h3>Detalles del Proceso</h3>
+  {% if user_processes %}
+    {% for p in user_processes %}
+      <div class="detail-row">
+        <span class="detail-label">ID Proceso:</span>
+        <span class="detail-value">{{ p.id }}</span>
       </div>
+      <div class="detail-row">
+        <span class="detail-label">Tipo de Visa:</span>
+        <span class="detail-value">{{ p.visa_type or 'N/A' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">País de Destino:</span>
+        <span class="detail-value">{{ p.destination_country or 'N/A' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Fecha de Inicio:</span>
+        <span class="detail-value">{{ p.start_date or 'N/A' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Estado Actual:</span>
+        <span class="detail-value">{{ p.status }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Última Actualización:</span>
+        <span class="detail-value">{{ p.updated_at }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Asesor Asignado:</span>
+        <span class="detail-value">{{ p.advisor_name or 'N/A' }}</span>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No tienes procesos registrados.</p>
+  {% endif %}
+</div>
+
     </section>
 
     <!-- Sección: Mensajes -->

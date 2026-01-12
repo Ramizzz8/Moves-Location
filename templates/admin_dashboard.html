@@ -1,32 +1,157 @@
-<h2>Clientes recientes</h2>
-<ul>
-{% for c in clientes %}
-    <li>{{ c.first_name }} {{ c.last_name }} - {{ c.email }}</li>
-{% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - MovesLocation</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <!-- Puedes crear un archivo admin.css o meterlo al final de style.css -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+</head>
+<body class="light-mode admin-page">
+  
+  <!-- Sidebar de Administración -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <a href="/" class="logo">
+        <img src="/static/images/logo.png" alt="MovesLocation">
+      </a>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#stats" class="nav-item active" onclick="showAdminSection('stats')">
+        <span class="nav-icon">📈</span> Resumen General
+      </a>
+      <a href="#users" class="nav-item" onclick="showAdminSection('users')">
+        <span class="nav-icon">👥</span> Gestión de Usuarios
+      </a>
+      <a href="#docs" class="nav-item" onclick="showAdminSection('docs')">
+        <span class="nav-icon">📂</span> Documentos Pendientes
+      </a>
+      <a href="#plans" class="nav-item" onclick="showAdminSection('plans')">
+        <span class="nav-icon">💳</span> Suscripciones y Pagos
+      </a>
+      <a href="#settings" class="nav-item" onclick="showAdminSection('settings')">
+        <span class="nav-icon">⚙️</span> Configuración Web
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/logout" class="liquid-button outline full-width">Cerrar Sesión</a>
+    </div>
+  </aside>
 
-<h2>Procesos</h2>
-<table>
-<tr>
-    <th>Cliente</th>
-    <th>Estado</th>
-    <th>Actualizar</th>
-</tr>
-{% for p in procesos %}
-<tr>
-    <td>{{ p.first_name }} {{ p.last_name }}</td>
-    <td>{{ p.status }}</td>
-    <td>
-        <form method="POST" action="/admin/process/{{ p.id }}/status">
-            <select name="status">
-                <option value="Pending" {% if p.status == 'Pending' %}selected{% endif %}>Pendiente</option>
-                <option value="In Review" {% if p.status == 'In Review' %}selected{% endif %}>En Revisión</option>
-                <option value="Approved" {% if p.status == 'Approved' %}selected{% endif %}>Aprobado</option>
-                <option value="Rejected" {% if p.status == 'Rejected' %}selected{% endif %}>Rechazado</option>
-            </select>
-            <button type="submit">Actualizar</button>
-        </form>
-    </td>
-</tr>
-{% endfor %}
-</table>
+  <main class="admin-main">
+    <header class="admin-top-bar">
+      <div class="search-bar">
+        <input type="text" placeholder="Buscar usuario, trámite o documento...">
+      </div>
+      <div class="admin-profile">
+        <div class="theme-switch-wrapper">
+          <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="admin-info">
+          <span>Admin Muvini</span>
+          <div class="avatar">M</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sección: Resumen General -->
+    <section id="stats" class="admin-section">
+      <div class="admin-header">
+        <h1>Panel de Control del Administrador</h1>
+        <p>Vista global del rendimiento de MovesLocation</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-label">Usuarios Totales</p>
+            <h3 class="stat-value">1,284</h3>
+            <span class="stat-trend up">+12% este mes</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-label">Trámites Activos</p>
+            <h3 class="stat-value">456</h3>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-label">Documentos por Validar</p>
+            <h3 class="stat-value">89</h3>
+            <span class="stat-trend alert">Urgente</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-content">
+            <p class="stat-label">Ingresos Mensuales</p>
+            <h3 class="stat-value">USD 12,400</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabla de Usuarios Recientes -->
+      <div class="admin-card table-card">
+        <div class="card-header">
+          <h3>Últimas Solicitudes Migratorias</h3>
+          <button class="liquid-button primary">Ver Todo</button>
+        </div>
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Usuario</th>
+              <th>País</th>
+              <th>Tipo de Visa</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Juan Pérez</td>
+              <td>México</td>
+              <td>Trabajo</td>
+              <td><span class="status-badge pending">En Revisión</span></td>
+              <td><button class="action-btn">Ver</button></td>
+            </tr>
+            <tr>
+              <td>Maria Garcia</td>
+              <td>Argentina</td>
+              <td>Estudiante</td>
+              <td><span class="status-badge approved">Aprobada</span></td>
+              <td><button class="action-btn">Ver</button></td>
+            </tr>
+            <tr>
+              <td>Alex Sytnyk</td>
+              <td>Ucrania</td>
+              <td>Residencia</td>
+              <td><span class="status-badge rejected">Faltan Datos</span></td>
+              <td><button class="action-btn">Ver</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function showAdminSection(id) {
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
+      // Lógica para cambiar de sección...
+    }
+
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('change', () => {
+      document.body.classList.toggle('dark-mode');
+      document.body.classList.toggle('light-mode');
+    });
+  </script>
+</body>
+</html>
+

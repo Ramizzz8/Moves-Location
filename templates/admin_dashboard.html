@@ -6,37 +6,152 @@
   <title>Admin Dashboard - MovesLocation</title>
   <link rel="stylesheet" href="/static/css/style.css">
   <style>
-    /* Estilo básico para acordeón */
-    .user-documents { display: none; margin-top: 10px; }
-    .user-name-btn { 
-      background: none; 
-      border: none; 
-      color: #007BFF; 
-      font-size: 1rem; 
-      cursor: pointer; 
-      text-decoration: underline; 
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      color: #333;
     }
-    .user-name-btn:hover { color: #0056b3; }
-    .status-badge { padding: 3px 6px; border-radius: 4px; color: white; font-weight: bold; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ffffff;
+      padding: 15px 30px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    header .logo img {
+      height: 40px;
+    }
+    header a.logout-btn {
+      color: #0d6efd;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    header a.logout-btn:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      padding: 25px 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h2, h3 {
+      color: #0d6efd;
+      margin-bottom: 15px;
+    }
+
+    /* Cards */
+    .card {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      margin-bottom: 25px;
+    }
+
+    .user-card {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    /* Tables */
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background-color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .admin-table th, .admin-table td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+    .admin-table th {
+      background-color: #e9f0ff;
+      font-weight: 600;
+    }
+    .admin-table tr:hover {
+      background-color: #f1f5ff;
+    }
+
+    /* Buttons */
+    button, select, input[type=text], input[type=email], input[type=password] {
+      padding: 8px 10px;
+      margin: 5px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+    }
+    button {
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover { background-color: #084298; }
+
+    /* Status badges */
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: inline-block;
+      color: white;
+    }
     .status-badge.approved { background-color: #28a745; }
     .status-badge.pending { background-color: #ffc107; color: black; }
     .status-badge.rejected { background-color: #dc3545; }
-    .admin-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-    .admin-table th, .admin-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    .admin-table th { background-color: #f2f2f2; }
-    .user-card { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+
+    /* User documents toggle */
+    .user-documents { display: none; margin-top: 10px; }
+
+    .user-name-btn {
+      background: none;
+      border: none;
+      color: #0d6efd;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .user-name-btn:hover { color: #084298; }
+
+    .add-advisor-form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      margin-top: 20px;
+    }
+
+    ul { list-style: none; padding-left: 0; }
+    ul li { padding: 5px 0; border-bottom: 1px solid #eee; }
+
   </style>
 </head>
-<body class="admin-dashboard">
+<body>
 
 <header>
-  <h1>Panel de Administración</h1>
-  <a href="/logout">Cerrar sesión</a>
+  <a href="/" class="logo">
+    <img src="/static/images/logo.png" alt="MovesLocation">
+  </a>
+  <a href="/logout" class="logout-btn">Cerrar sesión</a>
 </header>
 
 <main>
-  <!-- CLIENTES RECIENTES -->
-  <section id="clientes">
+  <!-- CLIENTES -->
+  <div class="card">
     <h2>Últimos Clientes Registrados</h2>
     <table class="admin-table">
       <thead>
@@ -45,38 +160,39 @@
           <th>Nombre</th>
           <th>Email</th>
           <th>País</th>
+          <th>Asesor</th>
         </tr>
       </thead>
       <tbody>
- {% for c in clientes %}
-<tr>
-  <td>{{ c.id }}</td>
-  <td>{{ c.first_name }} {{ c.last_name }}</td>
-  <td>{{ c.email }}</td>
-  <td>{{ c.country or 'N/A' }}</td>
-  <td>
-    <form action="{{ url_for('assign_advisor_to_client', client_id=c.id) }}" method="POST">
-      <select name="advisor_id" required>
-        <option value="">--Selecciona un asesor--</option>
-        {% for advisor in advisors %}
-          <option value="{{ advisor.id }}"
-            {% if c.advisor_id == advisor.id %}selected{% endif %}>
-            {{ advisor.first_name }} {{ advisor.last_name }}
-          </option>
+        {% for c in clientes %}
+        <tr>
+          <td>{{ c.id }}</td>
+          <td>{{ c.first_name }} {{ c.last_name }}</td>
+          <td>{{ c.email }}</td>
+          <td>{{ c.country or 'N/A' }}</td>
+          <td>
+            <form action="{{ url_for('assign_advisor_to_client', client_id=c.id) }}" method="POST">
+              <select name="advisor_id" required>
+                <option value="">--Selecciona un asesor--</option>
+                {% for advisor in advisors %}
+                  <option value="{{ advisor.id }}" {% if c.advisor_id == advisor.id %}selected{% endif %}>
+                    {{ advisor.first_name }} {{ advisor.last_name }}
+                  </option>
+                {% endfor %}
+              </select>
+              <button type="submit">Asignar</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="5">No hay clientes registrados</td></tr>
         {% endfor %}
-      </select>
-      <button type="submit">Asignar</button>
-    </form>
-  </td>
-</tr>
-{% else %}
-<tr><td colspan="5">No hay clientes registrados</td></tr>
-{% endfor %}
-
-  </section>
+      </tbody>
+    </table>
+  </div>
 
   <!-- PROCESOS -->
-  <section id="admin-processes">
+  <div class="card">
     <h2>Procesos de Clientes</h2>
     <table class="admin-table">
       <thead>
@@ -109,22 +225,16 @@
         {% endfor %}
       </tbody>
     </table>
-  </section>
+  </div>
 
-  <!-- DOCUMENTOS POR USUARIO -->
-  <section id="admin-documents" class="admin-section">
-    <div class="section-header">
-      <h2>Documentos de Usuarios</h2>
-    </div>
-
+  <!-- DOCUMENTOS -->
+  <div class="card">
+    <h2>Documentos de Usuarios</h2>
     {% for cliente in clientes %}
     <div class="user-card">
-      <!-- Nombre clicable del usuario -->
       <button class="user-name-btn" onclick="toggleDocuments('docs-{{ cliente.id }}')">
         {{ cliente.first_name }} {{ cliente.last_name }}
       </button>
-
-      <!-- Documentos del usuario -->
       <div class="user-documents" id="docs-{{ cliente.id }}">
         {% set user_docs = documentos_por_usuario[cliente.id] %}
         {% if user_docs %}
@@ -147,13 +257,9 @@
               <td><a href="{{ url_for('uploaded_file', filename=doc.file_path) }}" target="_blank">Ver Documento</a></td>
               <td>{{ doc.uploaded_at.strftime('%d/%m/%Y %H:%M') if doc.uploaded_at else 'N/A' }}</td>
               <td>
-                {% if doc.status == 'approved' %}
-                  <span class="status-badge approved">Aprobado</span>
-                {% elif doc.status == 'pending' %}
-                  <span class="status-badge pending">En Revisión</span>
-                {% else %}
-                  <span class="status-badge rejected">{{ doc.status }}</span>
-                {% endif %}
+                {% if doc.status == 'approved' %}<span class="status-badge approved">Aprobado</span>
+                {% elif doc.status == 'pending' %}<span class="status-badge pending">En Revisión</span>
+                {% else %}<span class="status-badge rejected">{{ doc.status }}</span>{% endif %}
               </td>
               <td>
                 <form method="POST" action="{{ url_for('change_document_status', id=doc.id) }}">
@@ -175,38 +281,35 @@
       </div>
     </div>
     {% endfor %}
-  </section>
-<!-- Formulario para añadir asesor -->
-<div class="add-advisor-form">
-  <h3>Añadir Nuevo Asesor</h3>
-  <form action="{{ url_for('add_advisor') }}" method="POST">
-    <input type="text" name="first_name" placeholder="Nombre" required>
-    <input type="text" name="last_name" placeholder="Apellido" required>
-    <input type="email" name="email" placeholder="Correo" required>
-    <input type="password" name="password" placeholder="Contraseña" required>
-    <button type="submit">Crear Asesor</button>
-  </form>
-</div>
-<h3>Asesores Registrados</h3>
-<ul>
-  {% for advisor in advisors %}
-    <li>{{ advisor.first_name }} {{ advisor.last_name }} - {{ advisor.email }}</li>
-  {% else %}
-    <li>No hay asesores registrados.</li>
-  {% endfor %}
-</ul>
+  </div>
+
+  <!-- AÑADIR ASESOR -->
+  <div class="add-advisor-form card">
+    <h3>Añadir Nuevo Asesor</h3>
+    <form action="{{ url_for('add_advisor') }}" method="POST">
+      <input type="text" name="first_name" placeholder="Nombre" required>
+      <input type="text" name="last_name" placeholder="Apellido" required>
+      <input type="email" name="email" placeholder="Correo" required>
+      <input type="password" name="password" placeholder="Contraseña" required>
+      <button type="submit">Crear Asesor</button>
+    </form>
+    <h4>Asesores Registrados</h4>
+    <ul>
+      {% for advisor in advisors %}
+        <li>{{ advisor.first_name }} {{ advisor.last_name }} - {{ advisor.email }}</li>
+      {% else %}
+        <li>No hay asesores registrados.</li>
+      {% endfor %}
+    </ul>
+  </div>
 
 </main>
 
 <script>
-  function toggleDocuments(id) {
-    const el = document.getElementById(id);
-    if (el.style.display === "block") {
-      el.style.display = "none";
-    } else {
-      el.style.display = "block";
-    }
-  }
+function toggleDocuments(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === "block" ? "none" : "block";
+}
 </script>
 
 </body>

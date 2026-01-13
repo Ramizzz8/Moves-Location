@@ -5,177 +5,278 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - MovesLocation</title>
   <link rel="stylesheet" href="/static/css/style.css">
-  <style>
-    /* Estilo básico para acordeón */
-    .user-documents { display: none; margin-top: 10px; }
-    .user-name-btn { 
-      background: none; 
-      border: none; 
-      color: #007BFF; 
-      font-size: 1rem; 
-      cursor: pointer; 
-      text-decoration: underline; 
-    }
-    .user-name-btn:hover { color: #0056b3; }
-    .status-badge { padding: 3px 6px; border-radius: 4px; color: white; font-weight: bold; }
-    .status-badge.approved { background-color: #28a745; }
-    .status-badge.pending { background-color: #ffc107; color: black; }
-    .status-badge.rejected { background-color: #dc3545; }
-    .admin-table { width: 100%; border-collapse: collapse; margin-top: 5px; }
-    .admin-table th, .admin-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-    .admin-table th { background-color: #f2f2f2; }
-    .user-card { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-  </style>
+  <link rel="preconnect" href__="https://fonts.googleapis.com">
+  <link rel="preconnect" href__="https://fonts.gstatic.com" crossorigin>
+  <link href__="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
-<body class="admin-dashboard">
-
-<header>
-  <h1>Panel de Administración</h1>
-  <a href="/logout">Cerrar sesión</a>
-</header>
-
-<main>
-  <!-- CLIENTES RECIENTES -->
-  <section id="clientes">
-    <h2>Últimos Clientes Registrados</h2>
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Email</th>
-          <th>País</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for c in clientes %}
-        <tr>
-          <td>{{ c.id }}</td>
-          <td>{{ c.first_name }} {{ c.last_name }}</td>
-          <td>{{ c.email }}</td>
-          <td>{{ c.country or 'N/A' }}</td>
-        </tr>
-        {% else %}
-        <tr><td colspan="4">No hay clientes registrados</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </section>
-
-  <!-- PROCESOS -->
-  <section id="admin-processes">
-    <h2>Procesos de Clientes</h2>
-    <table class="admin-table">
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Estado</th>
-          <th>Última Actualización</th>
-          <th>Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for p in procesos %}
-        <tr>
-          <td>{{ p.first_name }} {{ p.last_name }}</td>
-          <td>{{ p.status }}</td>
-          <td>{{ p.updated_at.strftime('%d/%m/%Y') if p.updated_at else 'N/A' }}</td>
-          <td>
-            <form action="/admin/process/{{ p.id }}/status" method="POST">
-              <select name="status">
-                <option value="pending" {% if p.status=='pending' %}selected{% endif %}>Pendiente</option>
-                <option value="in_review" {% if p.status=='in_review' %}selected{% endif %}>En Revisión</option>
-                <option value="completed" {% if p.status=='completed' %}selected{% endif %}>Completado</option>
-              </select>
-              <button type="submit">Actualizar</button>
-            </form>
-          </td>
-        </tr>
-        {% else %}
-        <tr><td colspan="4">No hay procesos registrados</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </section>
-
-  <!-- DOCUMENTOS POR USUARIO -->
-  <section id="admin-documents" class="admin-section">
-    <div class="section-header">
-      <h2>Documentos de Usuarios</h2>
+<body class="light-mode admin-page">
+  
+  <!-- Sidebar de Administración -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+<a href="/" class="logo">
+  <img src="/static/images/logo.png" alt="MovesLocation">
+      </a>
     </div>
+    <nav class="sidebar-nav">
+      <a href__="#clientes" class="nav-item active" data-section="clientes">
+        <span class="nav-icon">👥</span>
+        <span class="nav-text">Clientes</span>
+      </a>
+      <a href__="#admin-processes" class="nav-item" data-section="admin-processes">
+        <span class="nav-icon">🔄</span>
+        <span class="nav-text">Procesos</span>
+      </a>
+      <a href__="#admin-documents" class="nav-item" data-section="admin-documents">
+        <span class="nav-icon">📂</span>
+        <span class="nav-text">Documentos</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href__="/logout" class="liquid-button outline full-width">
+        <span>Cerrar Sesión</span>
+      </a>
+    </div>
+  </aside>
 
-    {% for cliente in clientes %}
-    <div class="user-card">
-      <!-- Nombre clicable del usuario -->
-      <button class="user-name-btn" onclick="toggleDocuments('docs-{{ cliente.id }}')">
-        {{ cliente.first_name }} {{ cliente.last_name }}
-      </button>
+  <main class="admin-main">
+    <!-- Barra Superior Mejorada -->
+    <header class="admin-top-bar">
+      <div class="search-bar">
+        <input type="text" placeholder="Buscar cliente o trámite...">
+      </div>
+      
+      <div class="admin-actions">
+        <div class="theme-switch-wrapper">
+          <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider">
+              <span class="icon sun">☀️</span>
+              <span class="icon moon">🌙</span>
+            </span>
+          </label>
+        </div>
+        
+        <div class="admin-profile">
+          <div class="admin-info">
+            <span class="admin-name">Admin {{ current_user.first_name if current_user else 'Muvini' }}</span>
+            <span class="admin-role">Data Analytics</span>
+          </div>
+          <div class="avatar">M</div>
+        </div>
+      </div>
+    </header>
 
-      <!-- Documentos del usuario -->
-      <div class="user-documents" id="docs-{{ cliente.id }}">
-        {% set user_docs = documentos_por_usuario[cliente.id] %}
-        {% if user_docs %}
+    <!-- CLIENTES RECIENTES -->
+    <section id="clientes" class="admin-section">
+      <div class="section-header">
+        <h1>Últimos Clientes Registrados</h1>
+      </div>
+      <div class="admin-card table-card">
         <table class="admin-table">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Tipo de Documento</th>
-              <th>Archivo</th>
-              <th>Subido el</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>País</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in clientes %}
+            <tr>
+              <td>{{ c.id }}</td>
+              <td><strong>{{ c.first_name }} {{ c.last_name }}</strong></td>
+              <td>{{ c.email }}</td>
+              <td><span class="country-tag">{{ c.country or 'N/A' }}</span></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" class="empty-msg">No hay clientes registrados</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PROCESOS -->
+    <section id="admin-processes" class="admin-section hidden">
+      <div class="section-header">
+        <h2>Procesos de Clientes</h2>
+      </div>
+      <div class="admin-card table-card">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
               <th>Estado</th>
+              <th>Actualización</th>
               <th>Acción</th>
             </tr>
           </thead>
           <tbody>
-            {% for doc in user_docs %}
+            {% for p in procesos %}
             <tr>
-              <td>{{ doc.id }}</td>
-              <td>{{ doc.type_name }}</td>
-              <td><a href="{{ url_for('uploaded_file', filename=doc.file_path) }}" target="_blank">Ver Documento</a></td>
-              <td>{{ doc.uploaded_at.strftime('%d/%m/%Y %H:%M') if doc.uploaded_at else 'N/A' }}</td>
+              <td>{{ p.first_name }} {{ p.last_name }}</td>
               <td>
-                {% if doc.status == 'approved' %}
-                  <span class="status-badge approved">Aprobado</span>
-                {% elif doc.status == 'pending' %}
-                  <span class="status-badge pending">En Revisión</span>
-                {% else %}
-                  <span class="status-badge rejected">{{ doc.status }}</span>
-                {% endif %}
+                <span class="status-badge {{ p.status }}">
+                  {{ 'Pendiente' if p.status == 'pending' else 'Revisión' if p.status == 'in_review' else 'Completado' }}
+                </span>
               </td>
+              <td>{{ p.updated_at.strftime('%d/%m/%Y') if p.updated_at else 'N/A' }}</td>
               <td>
-                <form method="POST" action="{{ url_for('change_document_status', id=doc.id) }}">
-                  <select name="status" required>
-                    <option value="pending" {% if doc.status=='pending' %}selected{% endif %}>En Revisión</option>
-                    <option value="approved" {% if doc.status=='approved' %}selected{% endif %}>Aprobado</option>
-                    <option value="rejected" {% if doc.status=='rejected' %}selected{% endif %}>Rechazado</option>
+                <form action="/admin/process/{{ p.id }}/status" method="POST" class="inline-form">
+                  <select name="status" class="admin-select">
+                    <option value="pending" {% if p.status=='pending' %}selected{% endif %}>Pendiente</option>
+                    <option value="in_review" {% if p.status=='in_review' %}selected{% endif %}>En Revisión</option>
+                    <option value="completed" {% if p.status=='completed' %}selected{% endif %}>Completado</option>
                   </select>
-                  <button type="submit">Actualizar</button>
+                  <button type="submit" class="action-btn mini">Actualizar</button>
                 </form>
               </td>
             </tr>
+            {% else %}
+            <tr><td colspan="4" class="empty-msg">No hay procesos registrados</td></tr>
             {% endfor %}
           </tbody>
         </table>
-        {% else %}
-        <p>No hay documentos subidos por este usuario.</p>
-        {% endif %}
       </div>
-    </div>
-    {% endfor %}
-  </section>
+    </section>
 
-</main>
+    <!-- DOCUMENTOS POR USUARIO -->
+    <section id="admin-documents" class="admin-section hidden">
+      <div class="section-header">
+        <h2>Documentos de Usuarios</h2>
+      </div>
 
-<script>
-  function toggleDocuments(id) {
-    const el = document.getElementById(id);
-    if (el.style.display === "block") {
-      el.style.display = "none";
-    } else {
-      el.style.display = "block";
+      {% for cliente in clientes %}
+      <div class="user-accordion-card">
+        <button class="user-accordion-header" onclick="toggleDocuments(this, 'docs-{{ cliente.id }}')">
+          <span class="user-info">👤 {{ cliente.first_name }} {{ cliente.last_name }}</span>
+          <span class="arrow">▼</span>
+        </button>
+
+        <div class="user-documents-content hidden" id="docs-{{ cliente.id }}">
+          {% set user_docs = documentos_por_usuario[cliente.id] %}
+          {% if user_docs %}
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Archivo</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for doc in user_docs %}
+              <tr>
+                <td>{{ doc.type_name }}</td>
+                <td><a href__="{{ url_for('uploaded_file', filename=doc.file_path) }}" target="_blank" class="link-accent">Ver Archivo</a></td>
+                <td>{{ doc.uploaded_at.strftime('%d/%m/%Y') }}</td>
+                <td><span class="status-badge {{ doc.status }}">{{ doc.status }}</span></td>
+                <td>
+                  <form method="POST" action="{{ url_for('change_document_status', id=doc.id) }}" class="inline-form">
+                    <select name="status" required class="admin-select">
+                      <option value="pending" {% if doc.status=='pending' %}selected{% endif %}>Revisión</option>
+                      <option value="approved" {% if doc.status=='approved' %}selected{% endif %}>Aprobar</option>
+                      <option value="rejected" {% if doc.status=='rejected' %}selected{% endif %}>Rechazar</option>
+                    </select>
+                    <button type="submit" class="action-btn mini">OK</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p class="empty-msg">Sin documentos subidos.</p>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+  </main>
+
+  <script>
+    // ====== NAVEGACIÓN DEL SIDEBAR ======
+    const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+    const sections = document.querySelectorAll('.admin-section');
+
+    navItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        // Remover clase active de todos los items
+        navItems.forEach(nav => nav.classList.remove('active'));
+        
+        // Agregar clase active al item clickeado
+        item.classList.add('active');
+        
+        // Obtener la sección a mostrar
+        const targetSection = item.getAttribute('data-section');
+        
+        // Ocultar todas las secciones
+        sections.forEach(section => section.classList.add('hidden'));
+        
+        // Mostrar solo la sección target
+        const sectionToShow = document.getElementById(targetSection);
+        if (sectionToShow) {
+          sectionToShow.classList.remove('hidden');
+        }
+      });
+    });
+
+    // ====== TOGGLE DE ACORDEONES ======
+    function toggleDocuments(button, id) {
+      const content = document.getElementById(id);
+      content.classList.toggle('hidden');
+      
+      // Rotar la flecha
+      button.classList.toggle('open');
     }
-  }
-</script>
 
+    // ====== THEME TOGGLE ======
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    // Cargar tema guardado
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      document.body.classList.remove('light-mode');
+      document.body.classList.add('dark-mode');
+      themeToggle.checked = true;
+    }
+
+    themeToggle.addEventListener('change', () => {
+      if (themeToggle.checked) {
+        document.body.classList.remove('light-mode');
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.remove('dark-mode');
+        document.body.classList.add('light-mode');
+        localStorage.setItem('theme', 'light');
+      }
+    });
+
+    // ====== BÚSQUEDA EN TIEMPO REAL ======
+    const searchInput = document.querySelector('.search-bar input');
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const tableRows = document.querySelectorAll('.admin-table tbody tr');
+        
+        tableRows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          if (text.includes(searchTerm)) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+    }
+  </script>
 </body>
 </html>
+

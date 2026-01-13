@@ -1,5 +1,5 @@
 /* ============================================
-   VARIABLES DE COLOR - SOFT METALLIC WHITE
+   VARIABLES DE COLOR - SOFT METALLIC WHITE MEJORADAS
    ============================================ */
 :root {
     /* Colores Base - Blancos y Grises Mate */
@@ -36,20 +36,22 @@
     --light-text-secondary: var(--gray-600);
     --light-border: var(--gray-200);
     --light-border-hover: var(--gray-300);
-    --light-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
-    --light-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-    --light-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
+    --light-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --light-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    --light-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    --light-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
     /* Modo Oscuro */
     --dark-bg: var(--gray-900);
     --dark-bg-secondary: var(--gray-800);
     --dark-text-primary: var(--gray-100);
     --dark-text-secondary: var(--gray-400);
-    --dark-border: rgba(255, 255, 255, 0.08);
-    --dark-border-hover: rgba(255, 255, 255, 0.12);
-    --dark-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --dark-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-    --dark-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --dark-border: rgba(255, 255, 255, 0.1);
+    --dark-border-hover: rgba(255, 255, 255, 0.15);
+    --dark-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --dark-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+    --dark-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -2px rgba(0, 0, 0, 0.5);
+    --dark-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 10px 10px -5px rgba(0, 0, 0, 0.6);
 
     /* Fuentes */
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -72,9 +74,9 @@
     --radius-full: 9999px;
 
     /* Transiciones */
-    --transition-fast: 0.15s ease-in-out;
-    --transition-base: 0.2s ease-in-out;
-    --transition-slow: 0.3s ease-in-out;
+    --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ============================================
@@ -93,6 +95,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color var(--transition-base), color var(--transition-base);
+    overflow-x: hidden;
 }
 
 a {
@@ -171,6 +174,8 @@ header {
     top: 0;
     z-index: 1000;
     transition: all var(--transition-base);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .logo {
@@ -196,7 +201,6 @@ header {
     transform: scale(1.05);
 }
 
-/* Ajustar en modo oscuro si es necesario */
 body.dark-mode .logo img {
     filter: brightness(1.1);
 }
@@ -214,7 +218,7 @@ nav {
 }
 
 /* ============================================
-   BOTONES - ESTILO MINIMALISTA
+   BOTONES - ESTILO MINIMALISTA MEJORADO
    ============================================ */
 .liquid-button {
     padding: 0.625rem 1.25rem;
@@ -228,6 +232,8 @@ nav {
     transition: all var(--transition-fast);
     border: 1px solid transparent;
     white-space: nowrap;
+    position: relative;
+    overflow: hidden;
 }
 
 body.light-mode .liquid-button {
@@ -257,13 +263,18 @@ body.dark-mode .liquid-button:hover {
     color: var(--white-pure);
     border-color: var(--accent-primary);
     font-weight: 600;
+    box-shadow: 0 2px 4px rgba(139, 157, 195, 0.2);
 }
 
 .liquid-button.primary:hover {
     background-color: var(--accent-primary-hover);
     border-color: var(--accent-primary-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(139, 157, 195, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 157, 195, 0.35);
+}
+
+.liquid-button.primary:active {
+    transform: translateY(0);
 }
 
 .liquid-button.outline {
@@ -292,6 +303,24 @@ body.dark-mode .liquid-button.outline:hover {
     background-color: rgba(139, 157, 195, 0.1);
 }
 
+.liquid-button.secondary {
+    background-color: var(--gray-200);
+    color: var(--gray-700);
+}
+
+body.dark-mode .liquid-button.secondary {
+    background-color: var(--gray-700);
+    color: var(--gray-200);
+}
+
+.liquid-button.secondary:hover {
+    background-color: var(--gray-300);
+}
+
+body.dark-mode .liquid-button.secondary:hover {
+    background-color: var(--gray-600);
+}
+
 .liquid-button.large {
     padding: 0.875rem 2rem;
     font-size: 1rem;
@@ -302,7 +331,7 @@ body.dark-mode .liquid-button.outline:hover {
 }
 
 /* ============================================
-   SWITCH DE TEMA
+   SWITCH DE TEMA MEJORADO
    ============================================ */
 .theme-switch-wrapper {
     display: flex;
@@ -332,6 +361,7 @@ body.dark-mode .liquid-button.outline:hover {
     background-color: var(--gray-200);
     transition: var(--transition-base);
     border-radius: var(--radius-full);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 body.dark-mode .slider {
@@ -348,7 +378,7 @@ body.dark-mode .slider {
     background-color: var(--white-pure);
     transition: var(--transition-base);
     border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
 input:checked + .slider {
@@ -461,11 +491,12 @@ body.dark-mode p {
 }
 
 /* ============================================
-   SECCIÓN HERO
+   SECCIÓN HERO MEJORADA
    ============================================ */
 .hero-section {
     text-align: center;
     padding: var(--spacing-3xl) 0 5rem 0;
+    position: relative;
 }
 
 .hero-subtitle {
@@ -492,7 +523,7 @@ body.dark-mode .hero-subtitle {
 }
 
 /* ============================================
-   GRID DE BENEFICIOS
+   GRID DE BENEFICIOS MEJORADO
    ============================================ */
 .benefits-grid {
     display: grid;
@@ -507,6 +538,7 @@ body.dark-mode .hero-subtitle {
     text-align: center;
     transition: all var(--transition-base);
     border: 1px solid;
+    position: relative;
 }
 
 body.light-mode .benefit-card {
@@ -517,8 +549,8 @@ body.light-mode .benefit-card {
 
 body.light-mode .benefit-card:hover {
     border-color: var(--accent-primary-light);
-    box-shadow: var(--light-shadow-md);
-    transform: translateY(-4px);
+    box-shadow: var(--light-shadow-lg);
+    transform: translateY(-6px);
 }
 
 body.dark-mode .benefit-card {
@@ -529,13 +561,19 @@ body.dark-mode .benefit-card {
 
 body.dark-mode .benefit-card:hover {
     border-color: var(--accent-primary);
-    box-shadow: var(--dark-shadow-md);
-    transform: translateY(-4px);
+    box-shadow: var(--dark-shadow-lg);
+    transform: translateY(-6px);
 }
 
 .benefit-icon {
     font-size: 2.5rem;
     margin-bottom: var(--spacing-md);
+    display: inline-block;
+    transition: transform var(--transition-base);
+}
+
+.benefit-card:hover .benefit-icon {
+    transform: scale(1.1);
 }
 
 .benefit-card h3 {
@@ -551,7 +589,7 @@ body.dark-mode .benefit-card:hover {
 }
 
 /* ============================================
-   SECCIÓN DE PLANES
+   SECCIÓN DE PLANES MEJORADA
    ============================================ */
 .section-subtitle {
     text-align: center;
@@ -592,8 +630,8 @@ body.light-mode .plan-card {
 
 body.light-mode .plan-card:hover {
     border-color: var(--accent-primary-light);
-    box-shadow: var(--light-shadow-lg);
-    transform: translateY(-6px);
+    box-shadow: var(--light-shadow-xl);
+    transform: translateY(-8px);
 }
 
 body.dark-mode .plan-card {
@@ -604,8 +642,8 @@ body.dark-mode .plan-card {
 
 body.dark-mode .plan-card:hover {
     border-color: var(--accent-primary);
-    box-shadow: var(--dark-shadow-lg);
-    transform: translateY(-6px);
+    box-shadow: var(--dark-shadow-xl);
+    transform: translateY(-8px);
 }
 
 .plan-card.featured {
@@ -615,7 +653,7 @@ body.dark-mode .plan-card:hover {
 }
 
 .plan-card.featured:hover {
-    transform: scale(1.05) translateY(-6px);
+    transform: scale(1.05) translateY(-8px);
 }
 
 .plan-badge {
@@ -718,7 +756,7 @@ body.dark-mode .plan-price .period {
 }
 
 /* ============================================
-   SECCIÓN DE CONTACTO
+   SECCIÓN DE CONTACTO MEJORADA
    ============================================ */
 .contact-section {
     padding: var(--spacing-3xl) 0;
@@ -830,7 +868,6 @@ body.dark-mode .form-group select:focus {
     width: 100%;
 }
 
-
 .form-hint {
     font-size: 0.875rem;
     margin-top: var(--spacing-xs);
@@ -901,7 +938,7 @@ body.light-mode .info-card {
 body.light-mode .info-card:hover {
     border-color: var(--accent-primary-light);
     box-shadow: var(--light-shadow-md);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
 }
 
 body.dark-mode .info-card {
@@ -913,7 +950,7 @@ body.dark-mode .info-card {
 body.dark-mode .info-card:hover {
     border-color: var(--accent-primary);
     box-shadow: var(--dark-shadow-md);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
 }
 
 .info-icon {
@@ -961,7 +998,7 @@ body.dark-mode .contact-extra {
 }
 
 /* ============================================
-   PÁGINAS DE AUTENTICACIÓN
+   PÁGINAS DE AUTENTICACIÓN MEJORADAS
    ============================================ */
 body.auth-page {
     display: flex;
@@ -974,6 +1011,8 @@ body.auth-page {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .auth-main {
@@ -999,13 +1038,13 @@ body.auth-page {
 body.light-mode .auth-card {
     background-color: var(--white-pure);
     border-color: var(--light-border);
-    box-shadow: var(--light-shadow-lg);
+    box-shadow: var(--light-shadow-xl);
 }
 
 body.dark-mode .auth-card {
     background-color: var(--dark-bg-secondary);
     border-color: var(--dark-border);
-    box-shadow: var(--dark-shadow-lg);
+    box-shadow: var(--dark-shadow-xl);
 }
 
 .auth-card.register-card {
@@ -1055,14 +1094,17 @@ body.dark-mode .password-strength {
 
 .password-strength[data-strength="weak"] .strength-bar {
     background-color: var(--error);
+    width: 33%;
 }
 
 .password-strength[data-strength="medium"] .strength-bar {
     background-color: var(--warning);
+    width: 66%;
 }
 
 .password-strength[data-strength="strong"] .strength-bar {
     background-color: var(--success);
+    width: 100%;
 }
 
 .auth-divider {
@@ -1111,6 +1153,7 @@ body.dark-mode .auth-divider span {
     flex: 1;
     padding: 0.75rem 1rem;
     font-size: 0.9375rem;
+    border: 1px solid;
 }
 
 body.light-mode .social-button {
@@ -1122,6 +1165,7 @@ body.light-mode .social-button {
 body.light-mode .social-button:hover {
     background-color: var(--gray-50);
     border-color: var(--light-border-hover);
+    transform: translateY(-1px);
 }
 
 body.dark-mode .social-button {
@@ -1133,6 +1177,7 @@ body.dark-mode .social-button {
 body.dark-mode .social-button:hover {
     background-color: rgba(255, 255, 255, 0.05);
     border-color: var(--dark-border-hover);
+    transform: translateY(-1px);
 }
 
 .auth-footer {
@@ -1156,7 +1201,7 @@ body.dark-mode .auth-footer {
 }
 
 /* ============================================
-   DASHBOARD
+   DASHBOARD DEL USUARIO MEJORADO
    ============================================ */
 body.dashboard-page {
     display: flex;
@@ -1170,6 +1215,8 @@ body.dashboard-page {
     justify-content: space-between;
     align-items: center;
     gap: var(--spacing-xl);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
 .dashboard-nav {
@@ -1202,6 +1249,7 @@ body.light-mode .nav-item:hover {
 body.light-mode .nav-item.active {
     background-color: var(--accent-primary);
     color: var(--white-pure);
+    box-shadow: 0 2px 8px rgba(139, 157, 195, 0.3);
 }
 
 body.dark-mode .nav-item {
@@ -1216,6 +1264,7 @@ body.dark-mode .nav-item:hover {
 body.dark-mode .nav-item.active {
     background-color: var(--accent-primary);
     color: var(--white-pure);
+    box-shadow: 0 2px 8px rgba(139, 157, 195, 0.4);
 }
 
 .nav-icon {
@@ -1263,7 +1312,7 @@ body.light-mode .user-avatar {
 }
 
 body.light-mode .user-avatar:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
     box-shadow: 0 4px 12px rgba(139, 157, 195, 0.3);
 }
 
@@ -1274,7 +1323,7 @@ body.dark-mode .user-avatar {
 }
 
 body.dark-mode .user-avatar:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
     box-shadow: 0 4px 12px rgba(139, 157, 195, 0.4);
 }
 
@@ -1292,13 +1341,13 @@ body.dark-mode .user-avatar:hover {
 body.light-mode .user-dropdown {
     background-color: var(--white-pure);
     border-color: var(--light-border);
-    box-shadow: var(--light-shadow-lg);
+    box-shadow: var(--light-shadow-xl);
 }
 
 body.dark-mode .user-dropdown {
     background-color: var(--dark-bg-secondary);
     border-color: var(--dark-border);
-    box-shadow: var(--dark-shadow-lg);
+    box-shadow: var(--dark-shadow-xl);
 }
 
 .dropdown-header {
@@ -1403,6 +1452,9 @@ body.dark-mode .dropdown-divider {
 
 .section-header {
     margin-bottom: var(--spacing-2xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .section-header h1 {
@@ -1414,16 +1466,6 @@ body.dark-mode .dropdown-divider {
 .section-header p {
     font-size: 1rem;
     margin: 0;
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.section-header > div:first-child {
-    flex: 1;
 }
 
 .stats-grid {
@@ -1451,7 +1493,7 @@ body.light-mode .stat-card {
 
 body.light-mode .stat-card:hover {
     box-shadow: var(--light-shadow-md);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 }
 
 body.dark-mode .stat-card {
@@ -1462,7 +1504,7 @@ body.dark-mode .stat-card {
 
 body.dark-mode .stat-card:hover {
     box-shadow: var(--dark-shadow-md);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 }
 
 .stat-icon {
@@ -1540,7 +1582,7 @@ body.dark-mode .progress-bar-container {
 
 .progress-bar {
     height: 100%;
-    background-color: var(--accent-primary);
+    background: linear-gradient(90deg, var(--accent-primary) 0%, var(--accent-primary-light) 100%);
     border-radius: var(--radius-full);
     transition: width var(--transition-slow);
 }
@@ -1724,6 +1766,33 @@ body.dark-mode .action-text {
     color: var(--gray-200);
 }
 
+/* ============================================
+   DOCUMENTOS - UPLOAD FORM VISIBLE
+   ============================================ */
+.upload-form-container {
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-xl);
+    border-radius: var(--radius-lg);
+    border: 1px solid;
+    transition: all var(--transition-base);
+}
+
+body.light-mode .upload-form-container {
+    background-color: var(--white-pure);
+    border-color: var(--light-border);
+    box-shadow: var(--light-shadow-sm);
+}
+
+body.dark-mode .upload-form-container {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--dark-border);
+    box-shadow: var(--dark-shadow-sm);
+}
+
+.upload-form-container.hidden {
+    display: none;
+}
+
 .documents-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -1794,20 +1863,21 @@ body.dark-mode .document-info h4 {
     border-radius: var(--radius-full);
     font-size: 0.75rem;
     font-weight: 600;
+    text-transform: capitalize;
 }
 
 .status-badge.approved {
-    background-color: rgba(16, 185, 129, 0.1);
+    background-color: rgba(16, 185, 129, 0.15);
     color: var(--success);
 }
 
 .status-badge.pending {
-    background-color: rgba(245, 158, 11, 0.1);
+    background-color: rgba(245, 158, 11, 0.15);
     color: var(--warning);
 }
 
 .status-badge.rejected {
-    background-color: rgba(239, 68, 68, 0.1);
+    background-color: rgba(239, 68, 68, 0.15);
     color: var(--error);
 }
 
@@ -1991,12 +2061,580 @@ body.dark-mode .message-time {
 }
 
 /* ============================================
-   FOOTER
+   ADMIN DASHBOARD - ESTILOS COMPLETOS Y MEJORADOS
+   ============================================ */
+
+/* Reset para página admin */
+body.admin-page {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--light-bg);
+    overflow-x: hidden;
+}
+
+body.dark-mode.admin-page {
+    background-color: var(--dark-bg);
+}
+
+/* SIDEBAR ADMIN - MEJORADO */
+.admin-sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background-color: var(--white-pure);
+    border-right: 1px solid var(--light-border);
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-lg);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1001;
+    box-shadow: var(--light-shadow-md);
+}
+
+body.dark-mode .admin-sidebar {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--dark-border);
+    box-shadow: var(--dark-shadow-md);
+}
+
+.sidebar-header {
+    padding: var(--spacing-md) 0;
+    margin-bottom: var(--spacing-xl);
+    border-bottom: 1px solid var(--light-border);
+}
+
+body.dark-mode .sidebar-header {
+    border-color: var(--dark-border);
+}
+
+.sidebar-header .logo {
+    font-size: 1.3rem;
+}
+
+.sidebar-header .logo img {
+    height: 40px;
+    width: auto;
+}
+
+/* Navegación Sidebar - MEJORADA */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    flex: 1;
+    margin-top: var(--spacing-md);
+}
+
+.sidebar-nav .nav-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: var(--gray-600);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    transition: all var(--transition-fast);
+    position: relative;
+}
+
+body.dark-mode .sidebar-nav .nav-item {
+    color: var(--gray-400);
+}
+
+.sidebar-nav .nav-item:hover {
+    background-color: var(--gray-100);
+    color: var(--gray-800);
+    transform: translateX(2px);
+}
+
+body.dark-mode .sidebar-nav .nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--gray-200);
+}
+
+.sidebar-nav .nav-item.active {
+    background-color: var(--accent-primary);
+    color: var(--white-pure);
+    box-shadow: 0 2px 8px rgba(139, 157, 195, 0.3);
+}
+
+.sidebar-nav .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 70%;
+    background-color: var(--white-pure);
+    border-radius: 0 2px 2px 0;
+}
+
+.nav-icon {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+}
+
+.nav-text {
+    flex: 1;
+}
+
+/* Footer del Sidebar */
+.sidebar-footer {
+    padding-top: var(--spacing-lg);
+    margin-top: auto;
+    border-top: 1px solid var(--light-border);
+}
+
+body.dark-mode .sidebar-footer {
+    border-color: var(--dark-border);
+}
+
+/* CONTENIDO PRINCIPAL ADMIN - CORREGIDO */
+.admin-main {
+    flex: 1;
+    margin-left: 260px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: calc(100% - 260px);
+}
+
+/* BARRA SUPERIOR ADMIN - MEJORADA */
+.admin-top-bar {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-2xl);
+    background-color: var(--white-pure);
+    border-bottom: 1px solid var(--light-border);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--light-shadow-sm);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+body.dark-mode .admin-top-bar {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--dark-border);
+    box-shadow: var(--dark-shadow-sm);
+}
+
+/* Barra de búsqueda - MEJORADA */
+.search-bar {
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--light-border);
+    background-color: var(--gray-50);
+    font-size: 0.9375rem;
+    transition: all var(--transition-fast);
+}
+
+body.dark-mode .search-bar input {
+    background-color: var(--dark-bg);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    background-color: var(--white-pure);
+    box-shadow: 0 0 0 3px rgba(139, 157, 195, 0.1);
+}
+
+body.dark-mode .search-bar input:focus {
+    background-color: var(--dark-bg-secondary);
+}
+
+.search-bar input::placeholder {
+    color: var(--gray-500);
+}
+
+/* Acciones Admin (perfil, tema) - MEJORADO */
+.admin-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding-left: var(--spacing-lg);
+    border-left: 1px solid var(--light-border);
+}
+
+body.dark-mode .admin-profile {
+    border-color: var(--dark-border);
+}
+
+.admin-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.admin-name {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    color: var(--gray-800);
+}
+
+body.dark-mode .admin-name {
+    color: var(--gray-200);
+}
+
+.admin-role {
+    font-size: 0.75rem;
+    color: var(--gray-500);
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--accent-primary);
+    color: var(--white-pure);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    box-shadow: 0 2px 8px rgba(139, 157, 195, 0.3);
+}
+
+/* SECCIONES ADMIN - MEJORADAS */
+.admin-section {
+    padding: var(--spacing-2xl);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.admin-section .section-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.admin-section .section-header h1,
+.admin-section .section-header h2 {
+    text-align: left;
+    margin-bottom: var(--spacing-sm);
+    font-size: 1.75rem;
+    color: var(--gray-800);
+}
+
+body.dark-mode .admin-section .section-header h1,
+body.dark-mode .admin-section .section-header h2 {
+    color: var(--gray-100);
+}
+
+/* CARDS ADMIN - MEJORADOS */
+.admin-card {
+    background-color: var(--white-pure);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--light-border);
+    box-shadow: var(--light-shadow-sm);
+    overflow: hidden;
+    transition: all var(--transition-base);
+}
+
+body.dark-mode .admin-card {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--dark-border);
+    box-shadow: var(--dark-shadow-sm);
+}
+
+.admin-card:hover {
+    box-shadow: var(--light-shadow-md);
+}
+
+body.dark-mode .admin-card:hover {
+    box-shadow: var(--dark-shadow-md);
+}
+
+.table-card {
+    overflow-x: auto;
+}
+
+/* TABLAS ADMIN - MEJORADAS */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+}
+
+.admin-table thead {
+    background-color: var(--gray-50);
+}
+
+body.dark-mode .admin-table thead {
+    background-color: var(--gray-800);
+}
+
+.admin-table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-600);
+    border-bottom: 1px solid var(--light-border);
+}
+
+body.dark-mode .admin-table th {
+    color: var(--gray-400);
+    border-color: var(--dark-border);
+}
+
+.admin-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--light-border);
+    color: var(--gray-700);
+}
+
+body.dark-mode .admin-table td {
+    border-color: var(--dark-border);
+    color: var(--gray-300);
+}
+
+.admin-table tbody tr {
+    transition: all var(--transition-fast);
+}
+
+.admin-table tbody tr:hover {
+    background-color: var(--gray-50);
+}
+
+body.dark-mode .admin-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Tags y Badges - MEJORADOS */
+.country-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    background-color: var(--gray-100);
+    color: var(--gray-700);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+body.dark-mode .country-tag {
+    background-color: var(--gray-700);
+    color: var(--gray-200);
+}
+
+.status-badge.in_review {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: var(--info);
+}
+
+.status-badge.completed {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+/* Formularios Inline - MEJORADOS */
+.inline-form {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.admin-select {
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--light-border);
+    background-color: var(--white-pure);
+    font-size: 0.8125rem;
+    cursor: pointer;
+    min-width: 120px;
+    transition: all var(--transition-fast);
+}
+
+body.dark-mode .admin-select {
+    background-color: var(--dark-bg);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+}
+
+.admin-select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px rgba(139, 157, 195, 0.1);
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    background-color: var(--accent-primary);
+    color: var(--white-pure);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.action-btn:hover {
+    background-color: var(--accent-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(139, 157, 195, 0.3);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+.action-btn.mini {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+}
+
+/* Mensaje vacío - MEJORADO */
+.empty-msg {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--gray-500);
+    font-style: italic;
+}
+
+/* ACORDEONES DE USUARIO - MEJORADOS */
+.user-accordion-card {
+    background-color: var(--white-pure);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--light-border);
+    margin-bottom: var(--spacing-md);
+    overflow: hidden;
+    box-shadow: var(--light-shadow-sm);
+    transition: all var(--transition-base);
+}
+
+body.dark-mode .user-accordion-card {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--dark-border);
+    box-shadow: var(--dark-shadow-sm);
+}
+
+.user-accordion-card:hover {
+    box-shadow: var(--light-shadow-md);
+}
+
+body.dark-mode .user-accordion-card:hover {
+    box-shadow: var(--dark-shadow-md);
+}
+
+.user-accordion-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background-color: var(--gray-50);
+    border: none;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    transition: all var(--transition-fast);
+}
+
+body.dark-mode .user-accordion-header {
+    background-color: var(--gray-800);
+    color: var(--gray-200);
+}
+
+.user-accordion-header:hover {
+    background-color: var(--gray-100);
+}
+
+body.dark-mode .user-accordion-header:hover {
+    background-color: var(--gray-700);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.arrow {
+    font-size: 0.75rem;
+    transition: transform var(--transition-fast);
+}
+
+.user-accordion-header.open .arrow {
+    transform: rotate(180deg);
+}
+
+.user-documents-content {
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--light-border);
+    animation: slideDown 0.3s ease-in-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body.dark-mode .user-documents-content {
+    border-color: var(--dark-border);
+}
+
+.user-documents-content.hidden {
+    display: none;
+}
+
+.user-documents-content .admin-table {
+    margin-top: 0;
+}
+
+/* ============================================
+   FOOTER MEJORADO
    ============================================ */
 footer {
     text-align: center;
     padding: var(--spacing-2xl) 5%;
     border-top: 1px solid;
+    margin-top: auto;
 }
 
 body.light-mode footer {
@@ -2024,7 +2662,14 @@ body.dark-mode footer p {
 }
 
 /* ============================================
-   RESPONSIVIDAD
+   UTILIDADES
+   ============================================ */
+.hidden {
+    display: none !important;
+}
+
+/* ============================================
+   RESPONSIVIDAD MEJORADA
    ============================================ */
 @media (max-width: 1024px) {
     .dashboard-nav {
@@ -2032,6 +2677,43 @@ body.dark-mode footer p {
     }
     
     .nav-item span:not(.nav-icon) {
+        display: none;
+    }
+
+    /* Admin responsive - Sidebar colapsado */
+    .admin-sidebar {
+        width: 80px;
+        padding: var(--spacing-md);
+    }
+    
+    .sidebar-header .logo img {
+        height: 30px;
+    }
+    
+    .nav-text {
+        display: none;
+    }
+    
+    .sidebar-nav .nav-item {
+        justify-content: center;
+        padding: 0.75rem;
+    }
+    
+    .nav-icon {
+        margin: 0;
+    }
+    
+    .admin-main {
+        margin-left: 80px;
+        width: calc(100% - 80px);
+    }
+    
+    .sidebar-footer .liquid-button {
+        padding: 0.75rem;
+        justify-content: center;
+    }
+
+    .sidebar-footer .liquid-button span {
         display: none;
     }
 }
@@ -2116,6 +2798,52 @@ body.dark-mode footer p {
     .social-login {
         flex-direction: column;
     }
+
+    /* Admin responsive - Móvil */
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform var(--transition-base);
+    }
+
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .admin-main {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .admin-top-bar {
+        padding: 0 var(--spacing-lg);
+    }
+    
+    .search-bar {
+        max-width: 200px;
+    }
+    
+    .admin-info {
+        display: none;
+    }
+    
+    .admin-section {
+        padding: var(--spacing-lg);
+    }
+    
+    .inline-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+    
+    .admin-select {
+        min-width: auto;
+    }
+
+    .admin-section .section-header h1,
+    .admin-section .section-header h2 {
+        font-size: 1.5rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2127,146 +2855,38 @@ body.dark-mode footer p {
         padding: 0.75rem 1.5rem;
         font-size: 0.9375rem;
     }
+
+    .admin-section .section-header h1,
+    .admin-section .section-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .admin-table {
+        font-size: 0.875rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 0.75rem 1rem;
+    }
 }
 
 /* ============================================
-   ADMIN DASHBOARD STYLES
+   MEJORAS DE ACCESIBILIDAD
    ============================================ */
-.admin-page {
-    display: flex;
-    min-height: 100vh;
-    background-color: var(--white-soft);
+*:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
 }
 
-/* Sidebar */
-.admin-sidebar {
-    width: 280px;
-    background-color: var(--white-pure);
-    border-right: 1px solid var(--light-border);
-    display: flex;
-    flex-direction: column;
-    padding: var(--spacing-xl);
-    position: fixed;
-    height: 100vh;
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
 }
 
-.sidebar-nav {
-    margin-top: var(--spacing-2xl);
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-    flex: 1;
-}
-
-.sidebar-nav .nav-item {
-    text-align: left;
-    justify-content: flex-start;
-    padding: 0.8rem 1.2rem;
-    color: var(--gray-600);
-}
-
-.sidebar-nav .nav-item.active {
-    background-color: var(--accent-primary);
-    color: white;
-}
-
-/* Main Content Area */
-.admin-main {
-    margin-left: 280px;
-    flex: 1;
-    padding: var(--spacing-2xl);
-}
-
-.admin-top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-3xl);
-    padding: var(--spacing-md) 0;
-}
-
-.search-bar input {
-    width: 400px;
-    padding: 0.7rem 1.2rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--light-border);
-    background-color: var(--white-pure);
-}
-
-.admin-info {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-    font-weight: 600;
-}
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    background-color: var(--accent-secondary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Table styling */
-.admin-card {
-    background-color: var(--white-pure);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
-    border: 1px solid var(--light-border);
-    box-shadow: var(--light-shadow-sm);
-}
-
-.admin-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: var(--spacing-lg);
-}
-
-.admin-table th {
-    text-align: left;
-    padding: 1rem;
-    border-bottom: 2px solid var(--gray-100);
-    color: var(--gray-500);
-    font-size: 0.85rem;
-    text-transform: uppercase;
-}
-
-.admin-table td {
-    padding: 1.2rem 1rem;
-    border-bottom: 1px solid var(--gray-100);
-    font-size: 0.95rem;
-}
-
-.action-btn {
-    padding: 0.4rem 1rem;
-    border-radius: var(--radius-sm);
-    background-color: var(--gray-100);
-    font-weight: 500;
-}
-
-.action-btn:hover {
-    background-color: var(--accent-primary-light);
-    color: white;
-}
-
-/* Trends */
-.stat-trend {
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
-    display: block;
-}
-
-.stat-trend.up { color: var(--success); }
-.stat-trend.alert { color: var(--error); }
-
-/* Dark Mode Admin */
-body.dark-mode .admin-sidebar,
-body.dark-mode .admin-card,
-body.dark-mode .search-bar input {
-    background-color: var(--gray-800);
-    border-color: var(--dark-border);
+/* Mejora de contraste para modo oscuro */
+body.dark-mode {
+    --dark-text-primary: #F3F4F6;
+    --dark-text-secondary: #D1D5DB;
 }

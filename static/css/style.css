@@ -432,6 +432,9 @@ section {
 section.hidden {
     display: none;
 }
+.hidden {
+  display: none !important;
+}
 
 h1 {
     font-size: 2.5rem;

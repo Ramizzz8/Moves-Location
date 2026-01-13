@@ -16,19 +16,19 @@
   <header class="dashboard-header">
     <div class="logo">MovesLocation</div>
     <nav class="dashboard-nav">
-      <a href="#overview" class="nav-item active" onclick="showDashboardSection('overview')">
+      <a href="#overview" class="nav-item active" onclick="showDashboardSection('overview', event)">
         <span class="nav-icon">📊</span>
         <span>Resumen</span>
       </a>
-      <a href="#documents" class="nav-item" onclick="showDashboardSection('documents')">
+      <a href="#documents" class="nav-item" onclick="showDashboardSection('documents', event)">
         <span class="nav-icon">📄</span>
         <span>Documentos</span>
       </a>
-      <a href="#process" class="nav-item" onclick="showDashboardSection('process')">
+      <a href="#process" class="nav-item" onclick="showDashboardSection('process', event)">
         <span class="nav-icon">🔄</span>
         <span>Mi Proceso</span>
       </a>
-      <a href="#messages" class="nav-item" onclick="showDashboardSection('messages')">
+      <a href="#messages" class="nav-item" onclick="showDashboardSection('messages', event)">
         <span class="nav-icon">💬</span>
         <span>Mensajes</span>
         <span class="badge">3</span>
@@ -45,13 +45,14 @@
         </label>
       </div>
       <div class="user-menu">
-        <button class="user-avatar" onclick="toggleUserMenu()">
-          <span>JP</span>
+        <button class="user-avatar" onclick="toggleUserMenu(event)">
+          <span>{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
+
         </button>
         <div class="user-dropdown hidden" id="user-dropdown">
           <div class="dropdown-header">
-            <p class="user-name">Juan Pérez</p>
-            <p class="user-email">juan@email.com</p>
+            <p class="user-name">{{ user.first_name }} {{ user.last_name }}</p>
+            <p class="user-email">{{ user.email }}</p>
           </div>
           <a href="#profile" class="dropdown-item">
             <span>👤</span> Mi Perfil
@@ -75,7 +76,7 @@
     <!-- Sección: Resumen -->
     <section id="overview" class="dashboard-section">
       <div class="section-header">
-        <h1>Bienvenido de nuevo, Juan 👋</h1>
+        <h1>Bienvenido de nuevo, {{ user.first_name }} 👋</h1>
         <p>Aquí está el resumen de tu proceso migratorio</p>
       </div>
 
@@ -85,7 +86,7 @@
           <div class="stat-icon">📄</div>
           <div class="stat-content">
             <p class="stat-label">Documentos Subidos</p>
-            <h3 class="stat-value">8</h3>
+            <h3 class="stat-value">{{ total_docs }}</h3>
           </div>
         </div>
 
@@ -93,7 +94,7 @@
           <div class="stat-icon">✅</div>
           <div class="stat-content">
             <p class="stat-label">Documentos Aprobados</p>
-            <h3 class="stat-value">5</h3>
+            <h3 class="stat-value">{{ approved_docs }}</h3>
           </div>
         </div>
 
@@ -101,7 +102,7 @@
           <div class="stat-icon">⏳</div>
           <div class="stat-content">
             <p class="stat-label">En Revisión</p>
-            <h3 class="stat-value">3</h3>
+            <h3 class="stat-value">{{ pending_docs }}</h3>
           </div>
         </div>
 
@@ -193,7 +194,7 @@
     </section>
 
     <!-- Sección: Documentos -->
-<!-- Sección: Documentos -->
+
 <section id="documents" class="dashboard-section hidden">
   <div class="section-header">
     <h1>Mis Documentos</h1>
@@ -308,95 +309,91 @@
     </section>
 
     <!-- Sección: Mensajes -->
-    <section id="messages" class="dashboard-section hidden">
-      <div class="section-header">
-        <h1>Mensajes</h1>
-        <button class="liquid-button primary">
-          <span>✉️</span> Nuevo Mensaje
-        </button>
+     <section id="messages" class="dashboard-section hidden">
+  <h2>Mis Mensajes</h2>
+ <div class="messages-list">
+  {% for msg in messages %}
+    <div class="message-card {% if msg.sender_id == user.id %}sent{% else %}received{% endif %}">
+      <div class="message-avatar">
+        {{ msg.first_name[0] }}{{ msg.last_name[0] }}
       </div>
-
-      <div class="messages-list">
-        <div class="message-card unread">
-          <div class="message-avatar">MG</div>
-          <div class="message-content">
-            <div class="message-header">
-              <h4>María González</h4>
-              <span class="message-time">Hace 2 horas</span>
-            </div>
-            <p>Hola Juan, hemos revisado tu certificado de antecedentes y necesitamos una aclaración...</p>
-          </div>
-        </div>
-
-        <div class="message-card unread">
-          <div class="message-avatar">SYS</div>
-          <div class="message-content">
-            <div class="message-header">
-              <h4>Sistema</h4>
-              <span class="message-time">Hace 1 día</span>
-            </div>
-            <p>Tu documento "Comprobante de Domicilio" ha sido recibido y está en proceso de revisión.</p>
-          </div>
-        </div>
-
-        <div class="message-card">
-          <div class="message-avatar">MG</div>
-          <div class="message-content">
-            <div class="message-header">
-              <h4>María González</h4>
-              <span class="message-time">Hace 3 días</span>
-            </div>
-            <p>Bienvenido a MovesLocation. Soy tu asesora asignada y estaré acompañándote en todo el proceso.</p>
-          </div>
-        </div>
+      <div class="message-content">
+        <p>{{ msg.content }}</p>
+        <span class="message-time">{{ msg.created_at.strftime('%d %b, %Y %H:%M') }}</span>
       </div>
+    </div>
+  {% else %}
+    <p>No tienes mensajes aún.</p>
+  {% endfor %}
+</div>
+
+<form action="/send_message" method="POST" class="send-message-form">
+  <textarea name="message" placeholder="Escribe tu mensaje..." required></textarea>
+  <button type="submit">Enviar</button>
+</form>
     </section>
   </main>
-
   <script>
-    // Toggle de tema
-    const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
+  /* =========================
+     TOGGLE DE TEMA
+  ========================== */
+  const themeToggle = document.getElementById('theme-toggle');
+  const body = document.body;
 
-    themeToggle.addEventListener('change', () => {
-      if (themeToggle.checked) {
-        body.classList.remove('light-mode');
-        body.classList.add('dark-mode');
-      } else {
-        body.classList.remove('dark-mode');
-        body.classList.add('light-mode');
-      }
+  themeToggle.addEventListener('change', () => {
+    body.classList.toggle('dark-mode', themeToggle.checked);
+    body.classList.toggle('light-mode', !themeToggle.checked);
+  });
+
+  /* =========================
+     DASHBOARD SECTIONS
+  ========================== */
+  function showDashboardSection(sectionId, event) {
+    // Ocultar todas las secciones
+    document.querySelectorAll('.dashboard-section').forEach(section => {
+      section.classList.add('hidden');
     });
 
-    // Mostrar secciones del dashboard
-    function showDashboardSection(sectionId) {
-      document.querySelectorAll('.dashboard-section').forEach(section => {
-        section.classList.add('hidden');
-      });
-      document.getElementById(sectionId).classList.remove('hidden');
-      
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.remove('active');
-      });
+    // Mostrar sección seleccionada
+    document.getElementById(sectionId).classList.remove('hidden');
+
+    // Quitar estado activo del menú
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+    });
+
+    // Marcar activo el item clicado
+    if (event) {
       event.currentTarget.classList.add('active');
     }
+  }
 
-    // Toggle del menú de usuario
-    function toggleUserMenu() {
-      const dropdown = document.getElementById('user-dropdown');
-      dropdown.classList.toggle('hidden');
+  /* =========================
+     USER DROPDOWN MENU
+  ========================== */
+  const userMenu = document.querySelector('.user-menu');
+  const userDropdown = document.getElementById('user-dropdown');
+
+  function toggleUserMenu(event) {
+    event.stopPropagation();
+    userDropdown.classList.toggle('hidden');
+  }
+
+  // Cerrar menú al hacer click fuera
+  document.addEventListener('click', () => {
+    userDropdown.classList.add('hidden');
+  });
+
+  /* =========================
+     UPLOAD DOCUMENT FORM
+  ========================== */
+  function toggleUploadForm() {
+    const formContainer = document.getElementById('upload-form-container');
+    if (formContainer) {
+      formContainer.classList.toggle('hidden');
     }
-
-    // Cerrar dropdown al hacer click fuera
-    document.addEventListener('click', (e) => {
-      const userMenu = document.querySelector('.user-menu');
-      const dropdown = document.getElementById('user-dropdown');
-      
-      if (!userMenu.contains(e.target)) {
-        dropdown.classList.add('hidden');
-      }
-    });
-  </script>
+  }
+</script>
 </body>
 </html>
 

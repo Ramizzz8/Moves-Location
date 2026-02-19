@@ -13,7 +13,7 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_segura'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://movesadmin:Movesadmin1234$@localhost/MovesLocation'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://if0_41195056:3F4yLAQriOv@sql202.infinityfree.com/if0_41195056_movelocation'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'   # Cambia según tu proveedor
 app.config['MAIL_PORT'] = 587

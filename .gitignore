@@ -1,0 +1,15 @@
+# Credenciales
+.env
+
+# Entorno virtual
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Base de datos local y archivos subidos por usuarios
+*.db
+uploads/

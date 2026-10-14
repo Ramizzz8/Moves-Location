@@ -8,19 +8,23 @@ import pymysql
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from dotenv import load_dotenv
 
+# Las credenciales se leen del archivo .env (no se sube a GitHub).
+# Copia .env.example a .env y rellena tus valores.
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'clave_secreta_segura'
+app.secret_key = os.environ.get('SECRET_KEY', 'cambia-esta-clave-en-produccion')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://if0_41195056:3F4yLAQriOv@sql202.infinityfree.com/if0_41195056_movelocation'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///moves_location.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'   # Cambia según tu proveedor
-app.config['MAIL_PORT'] = 587
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'tu_correo@gmail.com'  # Tu correo
-app.config['MAIL_PASSWORD'] = 'tu_contraseña_de_app' # Contraseña o App Password
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 
 # Configuración para subir archivos
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')

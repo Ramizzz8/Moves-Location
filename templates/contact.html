@@ -1,196 +1,52 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Contáctanos para resolver tus dudas sobre servicios migratorios.">
-  <title>Contáctanos - MovesLocation</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-</head>
-<body class="light-mode">
-  {% include '_avisos.html' %}
-  
-  <!-- Header con navegación -->
-  <header>
-    <a href="/" class="logo">
-  <img src="/static/images/logo.png" alt="MovesLocation">
-</a>
-    <nav>
-      <div class="nav-links">
-        <a href="/" class="liquid-button">Inicio</a>
-        <a href="/#plans" class="liquid-button">Planes</a>
-        <a href="/contact" class="liquid-button">Contacto</a>
-        <a href="/login" class="liquid-button primary">Iniciar Sesión</a>
-      </div>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch">
-          <input type="checkbox" id="theme-toggle">
-          <span class="slider">
-            <span class="icon sun">☀️</span>
-            <span class="icon moon">🌙</span>
-          </span>
-        </label>
-      </div>
-    </nav>
-  </header>
+{% extends 'base.html' %}
+{% block titulo %}Contacto{% endblock %}
+{% block descripcion %}Contacta con MovesLocation: cuéntanos tu caso y un asesor te responderá.{% endblock %}
 
-  <main>
-    <section class="contact-section">
-      <h1>Contáctanos</h1>
-      <p class="section-subtitle">¿Tienes dudas? Estamos aquí para ayudarte en tu proceso migratorio</p>
-      
-      <div class="contact-container">
-        <!-- Formulario de contacto -->
-        <div class="contact-form-wrapper">
-          <form method="POST" action="/contact" class="contact-form" onsubmit="handleContactSubmit(event)">
-            <div class="form-group">
-              <label for="nombre">Nombre completo</label>
-              <input 
-                type="text" 
-                id="nombre" 
-                name="nombre" 
-                placeholder="Juan Pérez" 
-                required 
-                autocomplete="name"
-              />
-            </div>
-            
-            <div class="form-group">
-              <label for="email">Correo electrónico</label>
-              <input 
-                type="email" 
-                id="email" 
-                name="email" 
-                placeholder="juan@ejemplo.com" 
-                required 
-                autocomplete="email"
-              />
-            </div>
-            
-            <div class="form-group">
-              <label for="telefono">Teléfono</label>
-              <input 
-                type="tel" 
-                id="telefono" 
-                name="telefono" 
-                placeholder="+34 600 000 000" 
-                required 
-                autocomplete="tel"
-              />
-            </div>
-            
-            <div class="form-group">
-              <label for="mensaje">Describe tu caso o interés</label>
-              <textarea 
-                id="mensaje" 
-                name="mensaje" 
-                rows="6" 
-                placeholder="Cuéntanos cómo podemos ayudarte con tu proceso migratorio..." 
-                required
-              ></textarea>
-            </div>
-            
-            <button type="submit" class="liquid-button primary large full-width">
-              Enviar Mensaje
-            </button>
-          </form>
+{% block cuerpo %}
+{% include '_cabecera.html' %}
+
+<main>
+  <section class="cabecera-pagina">
+    <div class="contenedor" data-aparecer>
+      <span class="antetitulo">Contacto</span>
+      <h1>Hablemos de tu caso</h1>
+      <p>Cuéntanos a dónde quieres ir y en qué punto estás. Te respondemos en menos de 24 horas laborables.</p>
+    </div>
+  </section>
+
+  <section class="contenedor contacto">
+    <form method="POST" action="/contact" class="caja" data-aparecer="izquierda">
+      <div class="fila-campos">
+        <div class="campo">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Laura Gómez" required maxlength="100" autocomplete="name">
         </div>
-
-        <!-- Información de contacto -->
-        <div class="contact-info">
-          <div class="info-card">
-            <div class="info-icon">📧</div>
-            <h4>Email</h4>
-            <p>info@moveslocation.com</p>
-            <a href="mailto:info@moveslocation.com" class="liquid-button outline">Enviar Email</a>
-          </div>
-          
-          <div class="info-card">
-            <div class="info-icon">📞</div>
-            <h4>Teléfono</h4>
-            <p>+34 900 123 456</p>
-            <a href="tel:+34900123456" class="liquid-button outline">Llamar Ahora</a>
-          </div>
-          
-          <div class="info-card">
-            <div class="info-icon">🕐</div>
-            <h4>Horario de Atención</h4>
-            <p>Lunes - Viernes</p>
-            <p>9:00 AM - 6:00 PM</p>
-          </div>
-
-          <div class="info-card">
-            <div class="info-icon">📍</div>
-            <h4>Ubicación</h4>
-            <p>Madrid, España</p>
-            <p>Calle Principal 123</p>
-          </div>
+        <div class="campo">
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" placeholder="+57 300 000 0000" maxlength="20" autocomplete="tel">
         </div>
       </div>
-
-      <!-- Sección adicional de FAQ o información -->
-      <div class="contact-extra">
-        <h3>¿Necesitas ayuda inmediata?</h3>
-        <p>Si tu caso es urgente, puedes contactarnos directamente por WhatsApp o agendar una videollamada con uno de nuestros asesores.</p>
-        <div class="cta-buttons">
-          <a href="https://wa.me/34900123456" target="_blank" class="liquid-button primary">
-            💬 WhatsApp
-          </a>
-          <a href="/schedule" class="liquid-button outline">
-            📅 Agendar Cita
-          </a>
-        </div>
+      <div class="campo">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="email" placeholder="tu@email.com" required maxlength="120" autocomplete="email">
       </div>
-    </section>
-  </main>
+      <div class="campo">
+        <label for="mensaje">¿En qué podemos ayudarte?</label>
+        <textarea id="mensaje" name="mensaje" rows="6" placeholder="Por ejemplo: quiero ir a España con un visado de estudios y no sé qué documentos necesito…" required maxlength="3000"></textarea>
+      </div>
+      <button type="submit" class="boton boton--primario boton--grande">Enviar mensaje
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>
+      </button>
+    </form>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2026 MovesLocation. Todos los derechos reservados.</p>
-    <p>Tu aliado en el proceso migratorio.</p>
-  </footer>
+    <div class="datos-contacto">
+      <div class="caja dato" data-aparecer="derecha"><div class="dato__icono">✉️</div><div><h3>Email</h3><p>info@moveslocation.com</p><a href="mailto:info@moveslocation.com">Escribir un correo →</a></div></div>
+      <div class="caja dato" data-aparecer="derecha" style="--retraso:.1s"><div class="dato__icono">📞</div><div><h3>Teléfono</h3><p>+34 900 123 456</p><a href="tel:+34900123456">Llamar ahora →</a></div></div>
+      <div class="caja dato" data-aparecer="derecha" style="--retraso:.2s"><div class="dato__icono">🕐</div><div><h3>Horario</h3><p>Lunes a viernes, de 9:00 a 18:00 (hora de Madrid)</p></div></div>
+      <div class="caja dato" data-aparecer="derecha" style="--retraso:.3s"><div class="dato__icono">📍</div><div><h3>Oficina</h3><p>Madrid, España</p></div></div>
+    </div>
+  </section>
+</main>
 
-  <script>
-    // Toggle de tema
-    const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
-
-    themeToggle.addEventListener('change', () => {
-      if (themeToggle.checked) {
-        body.classList.remove('light-mode');
-        body.classList.add('dark-mode');
-      } else {
-        body.classList.remove('dark-mode');
-        body.classList.add('light-mode');
-      }
-    });
-
-    // Manejo del formulario de contacto
-    function handleContactSubmit(event) {
-      event.preventDefault();
-      
-      const nombre = document.getElementById('nombre').value;
-      const email = document.getElementById('email').value;
-      const telefono = document.getElementById('telefono').value;
-      const mensaje = document.getElementById('mensaje').value;
-      
-      // Aquí iría la lógica para enviar el formulario al backend
-      console.log('Contact form submitted:', { nombre, email, telefono, mensaje });
-      
-      // Simulación de envío exitoso
-      alert(`Gracias ${nombre}, hemos recibido tu mensaje. Te contactaremos pronto a ${email}.`);
-      
-      // Limpiar formulario
-      event.target.reset();
-      
-      return false;
-    }
-  </script>
-</body>
-</html>
-
-
-
+{% include '_pie.html' %}
+{% endblock %}

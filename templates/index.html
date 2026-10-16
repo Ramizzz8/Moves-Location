@@ -1,248 +1,246 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MovesLocation - Tu aliado en el proceso migratorio. Gestiona documentos, seguimiento y asesoría legal.">
-  <title>MovesLocation - Servicios Migratorios</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-</head>
-<body class="light-mode">
-  
-  <!-- Header con navegación -->
-  <header>
-    <a href="/" class="logo">
-  <img src="/static/images/logo.png" alt="MovesLocation">
-</a>
-    <nav>
-      <div class="nav-links">
-        <a href="#home" class="liquid-button" onclick="showSection('home')">Inicio</a>
-        <a href="#plans" class="liquid-button" onclick="showSection('plans')">Planes</a>
-        <a href="#contact" class="liquid-button" onclick="showSection('contact')">Contacto</a>
-        <a href="/login" class="liquid-button primary">Iniciar Sesión</a>
-      </div>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch">
-          <input type="checkbox" id="theme-toggle">
-          <span class="slider">
-            <span class="icon sun">☀️</span>
-            <span class="icon moon">🌙</span>
-          </span>
-        </label>
-      </div>
-    </nav>
-  </header>
+{% extends 'base.html' %}
+{% block titulo %}Tu proceso migratorio, sin complicaciones{% endblock %}
 
-  <main>
-    <!-- Sección Home / Hero -->
-    <section id="home" class="hero-section">
-      <h1>Bienvenido a MovesLocation</h1>
-      <p class="hero-subtitle">Tu aliado en el proceso migratorio. Te ayudamos a gestionar tu documentación, seguimiento y asesoría legal de forma simple y segura.</p>
-      
-      <div class="cta-buttons">
-        <a href="/register" class="liquid-button primary large">Comenzar Ahora</a>
-        <a href="#plans" class="liquid-button outline large" onclick="showSection('plans')">Ver Planes</a>
-      </div>
+{% block cuerpo %}
+{% with transparente=True %}{% include '_cabecera.html' %}{% endwith %}
 
-      <!-- Grid de beneficios -->
-      <div class="benefits-grid">
-        <div class="benefit-card">
-          <div class="benefit-icon">📄</div>
-          <h3>Gestión de Documentos</h3>
-          <p>Sube, organiza y gestiona todos tus documentos migratorios en un solo lugar seguro.</p>
-        </div>
-        
-        <div class="benefit-card">
-          <div class="benefit-icon">🔍</div>
-          <h3>Seguimiento en Tiempo Real</h3>
-          <p>Monitorea el estado de tu proceso migratorio con actualizaciones instantáneas.</p>
-        </div>
-        
-        <div class="benefit-card">
-          <div class="benefit-icon">👨‍⚖️</div>
-          <h3>Asesoría Legal</h3>
-          <p>Accede a expertos en migración que te guiarán en cada paso del proceso.</p>
-        </div>
-        
-        <div class="benefit-card">
-          <div class="benefit-icon">🌍</div>
-          <h3>Soporte Multiidioma</h3>
-          <p>Atención en tu idioma para que te sientas como en casa desde el día uno.</p>
-        </div>
-      </div>
-    </section>
+<main>
+  <!-- ============ HERO con parallax ============ -->
+  <section class="hero" data-parallax data-inclinar>
+    <div class="capa capa--estrellas" data-velocidad="0.25"></div>
+    <div class="capa capa--globo" data-velocidad="0.18">
+      <div data-profundidad="18">{% include '_globo.html' %}</div>
+    </div>
+    <div class="capa capa--nubes" data-velocidad="-0.12">
+      <div class="nube nube--1"></div><div class="nube nube--2"></div><div class="nube nube--3"></div>
+    </div>
+    <div class="capa capa--avion" data-velocidad="-0.35">
+      <svg class="avion" viewBox="0 0 64 64" data-profundidad="-30" aria-hidden="true">
+        <path d="M58 8 6 28l17 6 4 18 9-12 13 9z" fill="#fff"/>
+        <path d="M23 34 58 8 27 38z" fill="#d7e3f5"/>
+        <path d="M27 38l-4 14 9-12z" fill="#b8c8e2"/>
+      </svg>
+    </div>
 
-    <!-- Sección Planes -->
-    <section id="plans" class="hidden">
-      <h2>Planes de Apoyo Migratorio</h2>
-      <p class="section-subtitle">Elige el plan que mejor se adapte a tus necesidades</p>
-      
-      <div class="plans-grid">
-        <!-- Plan Básico -->
-        <div class="plan-card">
-          <div class="plan-badge">Básico</div>
-          <h3>Asesoría Inicial</h3>
-          <div class="plan-price">
-            <span class="currency">USD</span>
-            <span class="amount">49</span>
-            <span class="period">/mes</span>
+    <div class="contenedor">
+      <div class="hero__contenido">
+        <span class="etiqueta" data-aparecer><b>Nuevo</b> Sigue tu trámite en tiempo real</span>
+        <h1 data-aparecer style="--retraso:.08s">Tu nueva vida empieza con un <span class="resaltado">buen plan</span></h1>
+        <p class="hero__texto" data-aparecer style="--retraso:.16s">
+          Te acompañamos en tu proceso migratorio de principio a fin: asesores expertos, tus documentos organizados
+          y cada paso de tu trámite a la vista.
+        </p>
+        <div class="hero__acciones" data-aparecer style="--retraso:.24s">
+          <a href="/register" class="boton boton--primario boton--grande">Empezar mi proceso
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#como-funciona" class="boton boton--fantasma boton--grande">Cómo funciona</a>
+        </div>
+        <div class="hero__confianza" data-aparecer style="--retraso:.32s">
+          <div class="avatares" aria-hidden="true">
+            <span style="background:#f6b81a">LG</span><span style="background:#ff9f9f">MF</span><span style="background:#8fd3ff">VR</span><span style="background:#b7f0c8">DC</span>
           </div>
-          <ul class="plan-features">
-            <li><span class="check">✓</span> Consulta inicial gratuita</li>
-            <li><span class="check">✓</span> Revisión de documentos</li>
-            <li><span class="check">✓</span> Orientación básica</li>
-            <li><span class="check">✓</span> Soporte por email</li>
-            <li><span class="cross">✗</span> Gestión completa</li>
-            <li><span class="cross">✗</span> Atención prioritaria</li>
+          <span><strong style="color:#fff">+2.400 familias</strong> ya han dado el paso con nosotros</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__tarjeta" data-velocidad="-0.08" data-aparecer="derecha" style="--retraso:.5s">
+      <small>Expediente · Visado de trabajo</small>
+      <strong>España · En revisión</strong>
+      <div class="barra-progreso" style="--p:68%"><i></i></div>
+      <div class="pasos"><span>Registro</span><span>Documentos</span><span>Revisión</span><span>Aprobación</span></div>
+    </div>
+
+    <a href="#servicios" class="desplazar" aria-label="Bajar"></a>
+    <svg class="hero__onda" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0 60c240 40 480 40 720 10s480-50 720-10v30H0z" fill="currentColor"/></svg>
+  </section>
+
+  <!-- ============ Cifras ============ -->
+  <section class="cifras">
+    <div class="contenedor">
+      <div class="cifras__caja" data-aparecer>
+        <div class="cifra"><strong data-contador="2400" data-sufijo="+">0</strong><span>familias acompañadas</span></div>
+        <div class="cifra"><strong data-contador="96" data-sufijo=" %">0</strong><span>de expedientes aprobados</span></div>
+        <div class="cifra"><strong data-contador="18">0</strong><span>países de destino</span></div>
+        <div class="cifra"><strong data-contador="4.9" data-sufijo=" ★">0</strong><span>valoración media</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Servicios ============ -->
+  <section class="seccion" id="servicios">
+    <div class="contenedor">
+      <div class="cabeza-seccion" data-aparecer>
+        <span class="antetitulo">Servicios</span>
+        <h2>Todo tu trámite, en un solo lugar</h2>
+        <p>Olvídate de carpetas, correos perdidos y llamadas sin respuesta. Desde tu panel controlas cada detalle.</p>
+      </div>
+      <div class="rejilla-servicios">
+        <article class="servicio" data-aparecer style="--acento:#b3202a">
+          <div class="servicio__icono"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></div>
+          <h3>Gestión de documentos</h3>
+          <p>Sube pasaportes, certificados y formularios. Tu asesor los revisa y te avisa si falta algo.</p>
+        </article>
+        <article class="servicio" data-aparecer style="--retraso:.1s;--acento:#f6b81a">
+          <div class="servicio__icono"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+          <h3>Seguimiento en tiempo real</h3>
+          <p>Mira en qué fase está tu expediente y qué viene después, sin tener que preguntar.</p>
+        </article>
+        <article class="servicio" data-aparecer style="--retraso:.2s;--acento:#4ea8ff">
+          <div class="servicio__icono"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.4 8.5-8 9-4.6-.5-8-4-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h3>Asesoría legal experta</h3>
+          <p>Un asesor especializado en extranjería te guía y resuelve tus dudas por mensaje.</p>
+        </article>
+        <article class="servicio" data-aparecer style="--acento:#12a37b">
+          <div class="servicio__icono"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18"/></svg></div>
+          <h3>Más de 18 destinos</h3>
+          <p>España, Portugal, Canadá, Alemania… conocemos los requisitos de cada país.</p>
+        </article>
+        <article class="servicio" data-aparecer style="--retraso:.1s;--acento:#a855f7">
+          <div class="servicio__icono"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <h3>Mensajería directa</h3>
+          <p>Habla con tu asesor desde el panel y guarda todo el historial de la conversación.</p>
+        </article>
+        <article class="servicio" data-aparecer style="--retraso:.2s;--acento:#ff7a45">
+          <div class="servicio__icono"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+          <h3>Tus datos, protegidos</h3>
+          <p>Contraseñas cifradas y acceso solo para ti y tu asesor. Tu información es tuya.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Cómo funciona ============ -->
+  <section class="seccion seccion--suave" id="como-funciona">
+    <div class="contenedor">
+      <div class="cabeza-seccion" data-aparecer>
+        <span class="antetitulo">Cómo funciona</span>
+        <h2>Cuatro pasos hasta tu destino</h2>
+        <p>Un proceso claro, sin letra pequeña y con alguien a tu lado en cada momento.</p>
+      </div>
+      <div class="pasos-proceso">
+        <div class="paso-proceso" data-aparecer><div class="paso-proceso__numero">1</div><h3>Crea tu cuenta</h3><p>Regístrate en un minuto y cuéntanos a qué país quieres ir.</p></div>
+        <div class="paso-proceso" data-aparecer style="--retraso:.12s"><div class="paso-proceso__numero">2</div><h3>Sube tus documentos</h3><p>Te decimos exactamente qué necesitas según tu visado.</p></div>
+        <div class="paso-proceso" data-aparecer style="--retraso:.24s"><div class="paso-proceso__numero">3</div><h3>Revisión experta</h3><p>Tu asesor valida todo y prepara el expediente contigo.</p></div>
+        <div class="paso-proceso" data-aparecer style="--retraso:.36s"><div class="paso-proceso__numero">4</div><h3>¡Aprobado!</h3><p>Recibe la resolución y prepara las maletas.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Destinos (parallax horizontal) ============ -->
+  <section class="destinos" data-parallax aria-label="Destinos">
+    <p class="destinos__titulo">Acompañamos procesos hacia</p>
+    <div class="cinta" data-velocidad="-0.35" data-eje="x">
+      {% for bandera, pais in [('ES','España'),('PT','Portugal'),('CA','Canadá'),('DE','Alemania'),('IT','Italia'),('FR','Francia'),('US','Estados Unidos'),('GB','Reino Unido'),('AU','Australia'),('NL','Países Bajos'),('IE','Irlanda'),('CH','Suiza')] %}
+        <span class="destino"><span class="codigo">{{ bandera }}</span>{{ pais }}</span>
+      {% endfor %}
+    </div>
+    <div class="cinta" data-velocidad="0.3" data-eje="x" style="margin-left:-40%">
+      {% for bandera, pais in [('SE','Suecia'),('NZ','Nueva Zelanda'),('BE','Bélgica'),('NO','Noruega'),('AT','Austria'),('DK','Dinamarca'),('ES','España'),('PT','Portugal'),('CA','Canadá'),('DE','Alemania'),('IT','Italia'),('FR','Francia')] %}
+        <span class="destino"><span class="codigo">{{ bandera }}</span>{{ pais }}</span>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- ============ Planes ============ -->
+  <section class="seccion" id="planes">
+    <div class="contenedor">
+      <div class="cabeza-seccion" data-aparecer>
+        <span class="antetitulo">Planes</span>
+        <h2>Elige cómo quieres que te acompañemos</h2>
+        <p>Sin permanencia. Cambia de plan cuando lo necesites.</p>
+      </div>
+      <div class="rejilla-planes">
+        <article class="plan" data-aparecer>
+          <h3>Asesoría inicial</h3>
+          <p class="plan__descripcion">Para resolver dudas y saber por dónde empezar.</p>
+          <div class="plan__precio"><strong>49 €</strong><span>/ mes</span></div>
+          <ul>
+            <li>Consulta inicial gratuita</li>
+            <li>Revisión de documentos</li>
+            <li>Orientación sobre tu visado</li>
+            <li>Soporte por mensaje</li>
+            <li class="no">Gestión completa del trámite</li>
           </ul>
-          <button class="liquid-button primary full-width">Seleccionar Plan</button>
-        </div>
-
-        <!-- Plan Premium -->
-        <div class="plan-card featured">
-          <div class="plan-badge premium">Premium</div>
-          <h3>Gestión Completa</h3>
-          <div class="plan-price">
-            <span class="currency">USD</span>
-            <span class="amount">149</span>
-            <span class="period">/mes</span>
-          </div>
-          <ul class="plan-features">
-            <li><span class="check">✓</span> Todo lo del plan Básico</li>
-            <li><span class="check">✓</span> Gestión completa del proceso</li>
-            <li><span class="check">✓</span> Seguimiento personalizado</li>
-            <li><span class="check">✓</span> Soporte 24/7</li>
-            <li><span class="check">✓</span> Preparación de entrevistas</li>
-            <li><span class="check">✓</span> Atención prioritaria</li>
+          <a href="/register" class="boton boton--suave boton--ancho">Elegir plan</a>
+        </article>
+        <article class="plan plan--destacado" data-aparecer style="--retraso:.12s">
+          <span class="plan__cinta">Más elegido</span>
+          <h3>Gestión completa</h3>
+          <p class="plan__descripcion">Nos encargamos de todo el proceso contigo.</p>
+          <div class="plan__precio"><strong>149 €</strong><span>/ mes</span></div>
+          <ul>
+            <li>Todo lo del plan inicial</li>
+            <li>Gestión completa del expediente</li>
+            <li>Asesor personal asignado</li>
+            <li>Preparación de entrevistas</li>
+            <li>Atención prioritaria</li>
           </ul>
-          <button class="liquid-button primary full-width">Seleccionar Plan</button>
-        </div>
-
-        <!-- Plan Personalizado -->
-        <div class="plan-card">
-          <div class="plan-badge">Personalizado</div>
-          <h3>Atención 1 a 1</h3>
-          <div class="plan-price">
-            <span class="currency">USD</span>
-            <span class="amount">299</span>
-            <span class="period">/mes</span>
-          </div>
-          <ul class="plan-features">
-            <li><span class="check">✓</span> Todo lo del plan Premium</li>
-            <li><span class="check">✓</span> Abogado dedicado</li>
-            <li><span class="check">✓</span> Estrategia personalizada</li>
-            <li><span class="check">✓</span> Reuniones ilimitadas</li>
-            <li><span class="check">✓</span> Gestión de casos complejos</li>
-            <li><span class="check">✓</span> Garantía de respuesta</li>
+          <a href="/register" class="boton boton--amarillo boton--ancho">Empezar ahora</a>
+        </article>
+        <article class="plan" data-aparecer style="--retraso:.24s">
+          <h3>Acompañamiento 1 a 1</h3>
+          <p class="plan__descripcion">Para casos complejos o familias completas.</p>
+          <div class="plan__precio"><strong>299 €</strong><span>/ mes</span></div>
+          <ul>
+            <li>Todo lo del plan completo</li>
+            <li>Abogado dedicado</li>
+            <li>Estrategia personalizada</li>
+            <li>Reuniones ilimitadas</li>
+            <li>Trámites para toda la familia</li>
           </ul>
-          <button class="liquid-button primary full-width">Contactar</button>
+          <a href="/contact" class="boton boton--suave boton--ancho">Hablar con un asesor</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Testimonios ============ -->
+  <section class="seccion seccion--suave">
+    <div class="contenedor">
+      <div class="cabeza-seccion" data-aparecer>
+        <span class="antetitulo">Testimonios</span>
+        <h2>Historias que ya llegaron a destino</h2>
+      </div>
+      <div class="rejilla-testimonios">
+        <figure class="testimonio" data-aparecer>
+          <div class="testimonio__estrellas" aria-label="5 de 5">★★★★★</div>
+          <p>«Tenía miedo de perderme en papeles. Con el panel siempre supe qué faltaba y mi asesora me respondía el mismo día.»</p>
+          <figcaption class="testimonio__autor"><span class="inicial" style="background:#f6b81a">LG</span><div><strong>Laura G.</strong><small>Colombia → España</small></div></figcaption>
+        </figure>
+        <figure class="testimonio" data-aparecer style="--retraso:.12s">
+          <div class="testimonio__estrellas" aria-label="5 de 5">★★★★★</div>
+          <p>«En tres meses tenía mi visado de nómada digital. El seguimiento en tiempo real es una tranquilidad enorme.»</p>
+          <figcaption class="testimonio__autor"><span class="inicial" style="background:#8fd3ff">MF</span><div><strong>Mateo F.</strong><small>Argentina → Portugal</small></div></figcaption>
+        </figure>
+        <figure class="testimonio" data-aparecer style="--retraso:.24s">
+          <div class="testimonio__estrellas" aria-label="5 de 5">★★★★★</div>
+          <p>«Nos ayudaron con el permiso de estudios de toda la familia. Cercanos, claros y muy profesionales.»</p>
+          <figcaption class="testimonio__autor"><span class="inicial" style="background:#b7f0c8">VR</span><div><strong>Valentina R.</strong><small>Chile → Canadá</small></div></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Llamada final ============ -->
+  <section class="seccion" style="padding-bottom:0">
+    <div class="contenedor">
+      <div class="llamada" data-parallax data-aparecer>
+        <span class="llamada__circulo" style="width:380px;height:380px;right:-120px;top:-160px" data-velocidad="0.15"></span>
+        <span class="llamada__circulo" style="width:220px;height:220px;right:120px;bottom:-140px" data-velocidad="-0.2"></span>
+        <div>
+          <h2>¿Listo para dar el primer paso?</h2>
+          <p>Crea tu cuenta gratis y un asesor revisará tu caso en menos de 24 horas.</p>
+        </div>
+        <div class="llamada__acciones">
+          <a href="/register" class="boton boton--amarillo boton--grande">Crear mi cuenta</a>
+          <a href="/contact" class="boton boton--fantasma boton--grande">Hablar con nosotros</a>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
+</main>
 
-    <!-- Sección Contacto -->
-    <section id="contact" class="hidden">
-      <h2>Contáctanos</h2>
-      <p class="section-subtitle">¿Tienes dudas? Estamos aquí para ayudarte</p>
-      
-      <div class="contact-container">
-        <div class="contact-form-wrapper">
-          <form class="contact-form" onsubmit="handleContactSubmit(event)">
-            <div class="form-group">
-              <label for="contact-name">Nombre completo</label>
-              <input type="text" id="contact-name" placeholder="Juan Pérez" required />
-            </div>
-            
-            <div class="form-group">
-              <label for="contact-email">Correo electrónico</label>
-              <input type="email" id="contact-email" placeholder="juan@ejemplo.com" required />
-            </div>
-            
-            <div class="form-group">
-              <label for="contact-phone">Teléfono (opcional)</label>
-              <input type="tel" id="contact-phone" placeholder="+34 600 000 000" />
-            </div>
-            
-            <div class="form-group">
-              <label for="contact-message">Mensaje</label>
-              <textarea id="contact-message" rows="6" placeholder="Cuéntanos cómo podemos ayudarte..." required></textarea>
-            </div>
-            
-            <button type="submit" class="liquid-button primary large full-width">Enviar Mensaje</button>
-          </form>
-        </div>
-
-        <div class="contact-info">
-          <div class="info-card">
-            <div class="info-icon">📧</div>
-            <h4>Email</h4>
-            <p>info@moveslocation.com</p>
-          </div>
-          
-          <div class="info-card">
-            <div class="info-icon">📞</div>
-            <h4>Teléfono</h4>
-            <p>+34 900 123 456</p>
-          </div>
-          
-          <div class="info-card">
-            <div class="info-icon">🕐</div>
-            <h4>Horario</h4>
-            <p>Lun - Vie: 9:00 - 18:00</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2026 MovesLocation. Todos los derechos reservados.</p>
-    <p>Tu aliado en el proceso migratorio.</p>
-  </footer>
-  <script>
-    // Toggle de tema
-    const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
-
-    themeToggle.addEventListener('change', () => {
-      if (themeToggle.checked) {
-        body.classList.remove('light-mode');
-        body.classList.add('dark-mode');
-      } else {
-        body.classList.remove('dark-mode');
-        body.classList.add('light-mode');
-      }
-    });
-
-    // Mostrar secciones
-    function showSection(id) {
-      document.querySelectorAll('main section').forEach((s) => s.classList.add('hidden'));
-      document.getElementById(id).classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Manejo del formulario de contacto
-    function handleContactSubmit(event) {
-      event.preventDefault();
-      const name = document.getElementById('contact-name').value;
-      const email = document.getElementById('contact-email').value;
-      alert(`Gracias ${name}, hemos recibido tu mensaje. Te contactaremos pronto a ${email}.`);
-      event.target.reset();
-    }
-
-    // Prevenir comportamiento por defecto de enlaces con onclick
-    document.querySelectorAll('a[onclick]').forEach(link => {
-      link.addEventListener('click', (e) => {
-        if (link.getAttribute('href').startsWith('#')) {
-          e.preventDefault();
-        }
-      });
-    });
-  </script>
-</body>
-</html>
-
+{% include '_pie.html' %}
+{% endblock %}

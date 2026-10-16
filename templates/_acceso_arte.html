@@ -1,0 +1,10 @@
+{# Panel decorativo de las páginas de acceso #}
+<aside class="acceso__arte" data-parallax data-inclinar>
+  <div class="capa capa--estrellas" data-velocidad="0.1"></div>
+  <div class="capa capa--globo"><div data-profundidad="20">{% include '_globo.html' %}</div></div>
+  <a href="/" class="marca" aria-label="Volver al inicio"><img src="/static/images/logo.png" alt="MovesLocation" width="140" height="42"></a>
+  <div class="acceso__cita" data-aparecer>
+    <h2>{{ frase_titulo }}</h2>
+    <p>{{ frase_texto }}</p>
+  </div>
+</aside>

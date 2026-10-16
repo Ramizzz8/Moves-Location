@@ -1,214 +1,71 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Regístrate en MovesLocation y comienza tu proceso migratorio.">
-  <title>Registro - MovesLocation</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-</head>
-<body class="light-mode auth-page">
-  {% include '_avisos.html' %}
-  
-  <!-- Header minimalista -->
-  <header class="auth-header">
-    <a href="/" class="logo">
-  <img src="/static/images/logo.png" alt="MovesLocation">
-</a>
-    <div class="theme-switch-wrapper">
-      <label class="theme-switch">
-        <input type="checkbox" id="theme-toggle">
-        <span class="slider">
-          <span class="icon sun">☀️</span>
-          <span class="icon moon">🌙</span>
-        </span>
-      </label>
-    </div>
-  </header>
+{% extends 'base.html' %}
+{% block titulo %}Crear cuenta{% endblock %}
+{% block descripcion %}Crea tu cuenta en MovesLocation y empieza tu proceso migratorio.{% endblock %}
 
-  <main class="auth-main">
-    <div class="auth-container">
-      <!-- Card de registro -->
-      <div class="auth-card register-card">
-        <div class="auth-header-content">
-          <h1>Crea tu cuenta</h1>
-          <p>Comienza tu proceso migratorio con nosotros</p>
+{% block cuerpo %}
+<div class="acceso">
+  {% with frase_titulo='Tu destino está más cerca de lo que crees.', frase_texto='Crea tu cuenta gratis y un asesor revisará tu caso en menos de 24 horas.' %}
+    {% include '_acceso_arte.html' %}
+  {% endwith %}
+
+  <main class="acceso__formulario">
+    <button class="boton-icono" type="button" data-cambiar-tema aria-label="Cambiar entre tema claro y oscuro">
+      <svg class="icono-sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+      <svg class="icono-luna" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+    </button>
+
+    <div class="acceso__caja" data-aparecer>
+      <a href="/" class="marca solo-movil" style="margin-bottom:28px"><img src="/static/images/logo.png" alt="MovesLocation" width="132" height="40"></a>
+      <h1>Crea tu cuenta</h1>
+      <p>Empieza tu proceso migratorio con nosotros. Solo te llevará un minuto.</p>
+
+      <form method="POST" action="/register">
+        <div class="fila-campos">
+          <div class="campo">
+            <label for="first-name">Nombre</label>
+            <input type="text" id="first-name" name="first_name" placeholder="Laura" required maxlength="100" autocomplete="given-name">
+          </div>
+          <div class="campo">
+            <label for="last-name">Apellidos</label>
+            <input type="text" id="last-name" name="last_name" placeholder="Gómez Ruiz" required maxlength="100" autocomplete="family-name">
+          </div>
         </div>
-
-        <!-- ✅ Formulario corregido -->
-        <form method="POST" action="/register" class="auth-form">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="first-name">Nombre</label>
-              <input type="text" id="first-name" name="first_name" placeholder="Juan" required autocomplete="given-name" />
-            </div>
-
-            <div class="form-group">
-              <label for="last-name">Apellidos</label>
-              <input type="text" id="last-name" name="last_name" placeholder="Pérez García" required autocomplete="family-name" />
-            </div>
+        <div class="campo">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" placeholder="tu@email.com" required maxlength="120" autocomplete="email">
+        </div>
+        <div class="fila-campos">
+          <div class="campo">
+            <label for="phone">Teléfono <small>(opcional)</small></label>
+            <input type="tel" id="phone" name="phone" placeholder="+57 300 000 0000" maxlength="20" autocomplete="tel">
           </div>
-
-          <div class="form-group">
-            <label for="email">Correo electrónico</label>
-            <input type="email" id="email" name="email" placeholder="tu@email.com" required autocomplete="email" />
-          </div>
-
-          <div class="form-group">
-            <label for="phone">Teléfono (opcional)</label>
-            <input type="tel" id="phone" name="phone" placeholder="+34 600 000 000" autocomplete="tel" />
-          </div>
-
-          <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres" required autocomplete="new-password" minlength="8" />
-            <div class="password-strength" id="password-strength">
-              <div class="strength-bar"></div>
-            </div>
-            <p class="form-hint">Usa al menos 8 caracteres con letras, números y símbolos</p>
-          </div>
-
-          <div class="form-group">
-            <label for="confirm-password">Confirmar contraseña</label>
-            <input type="password" id="confirm-password" name="confirm_password" placeholder="Repite tu contraseña" required autocomplete="new-password" />
-          </div>
-
-          <div class="form-group">
+          <div class="campo">
             <label for="country">País de origen</label>
             <select id="country" name="country" required>
-              <option value="">Selecciona tu país</option>
-              <option value="ES">España</option>
-              <option value="MX">México</option>
-              <option value="AR">Argentina</option>
-              <option value="CO">Colombia</option>
-              <option value="PE">Perú</option>
-              <option value="CL">Chile</option>
-              <option value="VE">Venezuela</option>
-              <option value="EC">Ecuador</option>
-              <option value="BO">Bolivia</option>
-              <option value="UY">Uruguay</option>
-              <option value="PY">Paraguay</option>
-              <option value="GT">Guatemala</option>
-              <option value="HN">Honduras</option>
-              <option value="SV">El Salvador</option>
-              <option value="NI">Nicaragua</option>
-              <option value="CR">Costa Rica</option>
-              <option value="PA">Panamá</option>
-              <option value="DO">República Dominicana</option>
-              <option value="CU">Cuba</option>
-              <option value="OTHER">Otro</option>
+              <option value="">Selecciona…</option>
+              {% for codigo, nombre in paises %}<option value="{{ codigo }}">{{ nombre }}</option>{% endfor %}
             </select>
           </div>
-
-          <div class="form-options">
-            <label class="checkbox-label">
-              <input type="checkbox" name="terms" required />
-              <span>Acepto los <a href="/terms" class="link-accent" target="_blank">términos y condiciones</a> y la <a href="/privacy" class="link-accent" target="_blank">política de privacidad</a></span>
-            </label>
-          </div>
-
-          <button type="submit" class="liquid-button primary large full-width">
-            Crear Cuenta
-          </button>
-        </form>
-
-        <div class="auth-divider">
-          <span>o regístrate con</span>
         </div>
-
-        <div class="social-login">
-          <button class="liquid-button social-button" onclick="registerWithGoogle()">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z" fill="#4285F4"/>
-              <path d="M10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20z" fill="#34A853"/>
-              <path d="M4.32 11.98c-.22-.59-.35-1.22-.35-1.98s.13-1.39.35-1.98V5.5H1.07C.39 6.85 0 8.35 0 10s.39 3.15 1.07 4.5l3.25-2.52z" fill="#FBBC05"/>
-              <path d="M10 3.87c1.45 0 2.76.5 3.78 1.48l2.84-2.84C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.5l3.25 2.52C5.12 5.61 7.36 3.87 10 3.87z" fill="#EA4335"/>
-            </svg>
-            Google
-          </button>
-          
-          <button class="liquid-button social-button" onclick="registerWithFacebook()">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" fill="#1877F2"/>
-            </svg>
-            Facebook
-          </button>
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password" placeholder="Mínimo 8 caracteres" required minlength="8" autocomplete="new-password" data-fuerza>
+          <div class="fuerza" aria-hidden="true"><i></i></div>
+          <small data-fuerza-texto>Usa letras, números y algún símbolo.</small>
         </div>
-
-        <div class="auth-footer">
-          <p>¿Ya tienes una cuenta? <a href="/login" class="link-accent">Inicia sesión</a></p>
+        <div class="campo">
+          <label for="confirm-password">Repite la contraseña</label>
+          <input type="password" id="confirm-password" name="confirm_password" required minlength="8" autocomplete="new-password" data-confirmar>
         </div>
-      </div>
+        <label class="casilla">
+          <input type="checkbox" name="terms" required>
+          <span>Acepto que MovesLocation trate mis datos para gestionar mi proceso migratorio.</span>
+        </label>
+        <button type="submit" class="boton boton--primario boton--grande boton--ancho">Crear mi cuenta</button>
+      </form>
+
+      <p class="acceso__pie">¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
     </div>
   </main>
-
-  <script>
-    // Toggle de tema
-    const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
-
-    themeToggle.addEventListener('change', () => {
-      if (themeToggle.checked) {
-        body.classList.remove('light-mode');
-        body.classList.add('dark-mode');
-      } else {
-        body.classList.remove('dark-mode');
-        body.classList.add('light-mode');
-      }
-    });
-
-    // Validación de contraseña en tiempo real
-    const passwordInput = document.getElementById('password');
-    const strengthBar = document.querySelector('.strength-bar');
-    const strengthContainer = document.getElementById('password-strength');
-
-    passwordInput.addEventListener('input', () => {
-      const password = passwordInput.value;
-      let strength = 0;
-
-      if (password.length >= 8) strength++;
-      if (password.match(/[a-z]+/)) strength++;
-      if (password.match(/[A-Z]+/)) strength++;
-      if (password.match(/[0-9]+/)) strength++;
-      if (password.match(/[$@#&!]+/)) strength++;
-
-      strengthBar.style.width = (strength * 20) + '%';
-      
-      if (strength <= 2) {
-        strengthBar.style.backgroundColor = '#EF4444';
-        strengthContainer.setAttribute('data-strength', 'weak');
-      } else if (strength <= 3) {
-        strengthBar.style.backgroundColor = '#F59E0B';
-        strengthContainer.setAttribute('data-strength', 'medium');
-      } else {
-        strengthBar.style.backgroundColor = '#10B981';
-        strengthContainer.setAttribute('data-strength', 'strong');
-      }
-    });
-
-    // Validación simple antes de enviar
-    const form = document.querySelector('.auth-form');
-    form.addEventListener('submit', (e) => {
-      const password = passwordInput.value;
-      const confirmPassword = document.getElementById('confirm-password').value;
-      if (password !== confirmPassword) {
-        alert('Las contraseñas no coinciden. Por favor, verifica.');
-        e.preventDefault(); // evita envío solo si no coinciden
-      }
-    });
-
-    // Registro con Google
-    function registerWithGoogle() {
-      alert('Registro con Google - Funcionalidad en desarrollo');
-    }
-
-    // Registro con Facebook
-    function registerWithFacebook() {
-      alert('Registro con Facebook - Funcionalidad en desarrollo');
-    }
-  </script>
-</body>
-</html>
+</div>
+{% endblock %}

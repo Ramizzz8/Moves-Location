@@ -1,0 +1,32 @@
+{# Cabecera pública: portada, contacto y páginas de acceso #}
+<header class="cabecera {% if transparente %}cabecera--transparente{% endif %}" data-cabecera>
+  <div class="contenedor cabecera__interior">
+    <a href="/" class="marca" aria-label="MovesLocation, inicio">
+      <img src="/static/images/logo.png" alt="MovesLocation" width="132" height="40">
+    </a>
+
+    <nav class="nav" id="nav-principal" aria-label="Principal">
+      <a href="/#servicios">Servicios</a>
+      <a href="/#como-funciona">Cómo funciona</a>
+      <a href="/#planes">Planes</a>
+      <a href="/contact">Contacto</a>
+      {% if not session.get('user_id') %}<a href="/login" class="solo-movil">Iniciar sesión</a>{% endif %}
+    </nav>
+
+    <div class="cabecera__acciones">
+      <button class="boton-icono" type="button" data-cambiar-tema aria-label="Cambiar entre tema claro y oscuro">
+        <svg class="icono-sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+        <svg class="icono-luna" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+      </button>
+      {% if session.get('user_id') %}
+        <a href="{{ '/admin/dashboard' if session.get('role') == 'admin' else '/dashboard' }}" class="boton boton--primario boton--pequeno">Mi panel</a>
+      {% else %}
+        <a href="/login" class="enlace-acceso">Iniciar sesión</a>
+        <a href="/register" class="boton boton--primario boton--pequeno">Empezar</a>
+      {% endif %}
+      <button class="boton-icono menu-movil" type="button" data-menu aria-controls="nav-principal" aria-expanded="false" aria-label="Abrir menú">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+</header>

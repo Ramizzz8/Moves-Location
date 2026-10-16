@@ -4,8 +4,8 @@ def test_register_success(client):
         'last_name': 'Perez',
         'email': 'juan@test.com',
         'country': 'Spain',
-        'password': '1234',
-        'confirm_password': '1234'
+        'password': 'Clave1234',
+        'confirm_password': 'Clave1234'
     }, follow_redirects=True)
 
     assert response.status_code == 200

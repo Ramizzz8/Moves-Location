@@ -1,0 +1,38 @@
+{# Globo terráqueo decorativo con rutas de vuelo animadas (SVG puro) #}
+<svg class="globo" viewBox="0 0 600 600" aria-hidden="true">
+  <defs>
+    <radialGradient id="degradado-globo" cx="38%" cy="32%" r="75%">
+      <stop offset="0" stop-color="#2d6bc4" stop-opacity=".55"/>
+      <stop offset=".55" stop-color="#143566" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#0b1b33" stop-opacity=".1"/>
+    </radialGradient>
+    <clipPath id="recorte-globo"><circle cx="300" cy="300" r="240"/></clipPath>
+  </defs>
+  <circle cx="300" cy="300" r="270" fill="none" stroke="rgba(150,200,255,.08)" stroke-width="1"/>
+  <circle class="esfera" cx="300" cy="300" r="240"/>
+  <g class="malla" clip-path="url(#recorte-globo)">
+    <g class="giro">
+      <ellipse cx="300" cy="300" rx="240" ry="240"/>
+      <ellipse cx="300" cy="300" rx="190" ry="240"/>
+      <ellipse cx="300" cy="300" rx="130" ry="240"/>
+      <ellipse cx="300" cy="300" rx="65" ry="240"/>
+      <line x1="300" y1="60" x2="300" y2="540"/>
+    </g>
+    <ellipse cx="300" cy="300" rx="240" ry="60"/>
+    <ellipse cx="300" cy="300" rx="240" ry="140"/>
+    <line x1="60" y1="300" x2="540" y2="300"/>
+    <ellipse cx="300" cy="190" rx="215" ry="26"/>
+    <ellipse cx="300" cy="410" rx="215" ry="26"/>
+  </g>
+  <!-- Rutas de vuelo entre ciudades -->
+  <path class="ruta" d="M170 360 Q 250 170 405 230"/>
+  <path class="ruta ruta--2" d="M215 455 Q 300 300 405 230"/>
+  <path class="ruta ruta--3" d="M140 250 Q 300 120 460 330"/>
+  <g>
+    <circle class="punto" cx="405" cy="230" r="5"/><circle class="pulso" cx="405" cy="230" r="6"/>
+    <circle class="punto" cx="170" cy="360" r="4"/>
+    <circle class="punto" cx="215" cy="455" r="4"/>
+    <circle class="punto" cx="140" cy="250" r="4"/>
+    <circle class="punto" cx="460" cy="330" r="4"/><circle class="pulso" cx="460" cy="330" r="6"/>
+  </g>
+</svg>

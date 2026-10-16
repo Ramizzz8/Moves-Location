@@ -1,401 +1,205 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Panel de usuario - Gestiona tu proceso migratorio en MovesLocation.">
-  <title>Dashboard - MovesLocation</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-</head>
-<body class="light-mode dashboard-page">
-  {% include '_avisos.html' %}
-  
-  <!-- Header del dashboard -->
-  <header class="dashboard-header">
-    <div class="logo">MovesLocation</div>
-    <nav class="dashboard-nav">
-      <a href="#overview" class="nav-item active" onclick="showDashboardSection('overview', event)">
-        <span class="nav-icon">📊</span>
-        <span>Resumen</span>
-      </a>
-      <a href="#documents" class="nav-item" onclick="showDashboardSection('documents', event)">
-        <span class="nav-icon">📄</span>
-        <span>Documentos</span>
-      </a>
-      <a href="#process" class="nav-item" onclick="showDashboardSection('process', event)">
-        <span class="nav-icon">🔄</span>
-        <span>Mi Proceso</span>
-      </a>
-      <a href="#messages" class="nav-item" onclick="showDashboardSection('messages', event)">
-        <span class="nav-icon">💬</span>
-        <span>Mensajes</span>
-        <span class="badge">3</span>
+{% extends 'base.html' %}
+{% from '_iconos.html' import icono %}
+{% block titulo %}Mi panel{% endblock %}
+
+{% block cuerpo %}
+{% set proceso = user_processes[0] if user_processes else None %}
+{% set estado = proceso.status if proceso else None %}
+{% set progreso = {'pending': 40, 'in_review': 70, 'completed': 100}.get(estado, 15 if not total_docs else 30) %}
+{# MySQL devuelve is_read como 0/1: rejectattr('is_read') descarta los ya leídos #}
+{% set no_leidos = messages | rejectattr('sender_id', 'equalto', user.id) | rejectattr('is_read') | list | length %}
+{% set iniciales = (user.first_name[:1] ~ user.last_name[:1]) | upper %}
+
+<div class="panel">
+  <aside class="panel__lateral">
+    <a href="/" class="marca"><img src="/static/images/logo.png" alt="MovesLocation" width="128" height="38"></a>
+    <nav class="panel__nav" aria-label="Panel">
+      <a href="#resumen" data-pestana="resumen" data-titulo="Resumen" class="activo">{{ icono('resumen') }} Resumen</a>
+      <a href="#documentos" data-pestana="documentos" data-titulo="Mis documentos">{{ icono('documento') }} Documentos</a>
+      <a href="#proceso" data-pestana="proceso" data-titulo="Mi proceso">{{ icono('proceso') }} Mi proceso</a>
+      <a href="#mensajes" data-pestana="mensajes" data-titulo="Mensajes">{{ icono('mensajes') }} Mensajes
+        {% if no_leidos %}<span class="contador">{{ no_leidos }}</span>{% endif %}
       </a>
     </nav>
-    <div class="header-actions">
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch">
-          <input type="checkbox" id="theme-toggle">
-          <span class="slider">
-            <span class="icon sun">☀️</span>
-            <span class="icon moon">🌙</span>
-          </span>
-        </label>
-      </div>
-      <div class="user-menu">
-        <button class="user-avatar" onclick="toggleUserMenu(event)">
-          <span>{{ user.first_name[0] }}{{ user.last_name[0] }}</span>
-
-        </button>
-        <div class="user-dropdown hidden" id="user-dropdown">
-          <div class="dropdown-header">
-            <p class="user-name">{{ user.first_name }} {{ user.last_name }}</p>
-            <p class="user-email">{{ user.email }}</p>
-          </div>
-          <a href="#profile" class="dropdown-item">
-            <span>👤</span> Mi Perfil
-          </a>
-          <a href="#settings" class="dropdown-item">
-            <span>⚙️</span> Configuración
-          </a>
-          <a href="#help" class="dropdown-item">
-            <span>❓</span> Ayuda
-          </a>
-          <hr class="dropdown-divider">
-          <a href="/logout" class="dropdown-item logout">
-            <span>🚪</span> Cerrar Sesión
-          </a>
-        </div>
-      </div>
+    <div class="panel__usuario">
+      <span class="avatar">{{ iniciales }}</span>
+      <div><strong>{{ user.first_name }} {{ user.last_name }}</strong><small>{{ user.email }}</small></div>
+      <a href="/logout" title="Cerrar sesión" aria-label="Cerrar sesión">{{ icono('salir') }}</a>
     </div>
-  </header>
+  </aside>
 
-  <main class="dashboard-main">
-    <!-- Sección: Resumen -->
-    <section id="overview" class="dashboard-section">
-      <div class="section-header">
-        <h1>Bienvenido de nuevo, {{ user.first_name }} 👋</h1>
-        <p>Aquí está el resumen de tu proceso migratorio</p>
+  <div class="panel__principal">
+    <header class="panel__barra">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="boton-icono solo-movil" type="button" data-abrir-lateral aria-label="Abrir menú">{{ icono('menu') }}</button>
+        <div><small>Panel de cliente</small><h1 data-titulo-panel>Resumen</h1></div>
       </div>
-
-      <!-- Stats Cards -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">📄</div>
-          <div class="stat-content">
-            <p class="stat-label">Documentos Subidos</p>
-            <h3 class="stat-value">{{ total_docs }}</h3>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">✅</div>
-          <div class="stat-content">
-            <p class="stat-label">Documentos Aprobados</p>
-            <h3 class="stat-value">{{ approved_docs }}</h3>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">⏳</div>
-          <div class="stat-content">
-            <p class="stat-label">En Revisión</p>
-            <h3 class="stat-value">{{ pending_docs }}</h3>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon">📅</div>
-          <div class="stat-content">
-            <p class="stat-label">Próxima Cita</p>
-            <h3 class="stat-value">15 Ene</h3>
-          </div>
-        </div>
+      <div class="panel__barra-acciones">
+        <button class="boton-icono" type="button" data-cambiar-tema aria-label="Cambiar entre tema claro y oscuro">
+          <svg class="icono-sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+          <svg class="icono-luna" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+        </button>
+        <a href="/" class="boton boton--suave boton--pequeno">{{ icono('inicio') }} Web</a>
       </div>
+    </header>
 
-      <!-- Estado del Proceso -->
-      <div class="process-status-card">
-        <h2>Estado de tu Proceso</h2>
-        <div class="progress-bar-container">
-          <div class="progress-bar" style="width: 60%;"></div>
+    <div class="panel__contenido">
+      <!-- ================= RESUMEN ================= -->
+      <section id="resumen" class="panel__seccion">
+        <div class="bienvenida">
+          <div class="globo-mini">{% include '_globo.html' %}</div>
+          <h2>¡Hola, {{ user.first_name }}! 👋</h2>
+          <p>
+            {% if proceso %}Tu {{ (proceso.visa_type or 'trámite') | lower }} para <strong>{{ proceso.destination_country or 'tu destino' }}</strong> está
+              <strong>{{ estados_proceso.get(estado, estado) | lower }}</strong>.
+              {% if estado == 'completed' %}¡Enhorabuena, ya casi tienes las maletas listas!{% else %}Te avisaremos en cuanto haya novedades.{% endif %}
+            {% else %}Aún no tienes un proceso abierto. Sube tus primeros documentos y tu asesor lo pondrá en marcha.{% endif %}
+          </p>
         </div>
-        <p class="progress-text">60% completado - En revisión de documentos</p>
-        
-        <div class="timeline">
-          <div class="timeline-item completed">
-            <div class="timeline-icon">✓</div>
-            <div class="timeline-content">
-              <h4>Registro Completado</h4>
-              <p>5 de enero, 2026</p>
-            </div>
+
+        <div class="tarjetas-datos">
+          <div class="dato-panel" data-aparecer>
+            <div class="dato-panel__cabeza">Documentos <span class="dato-panel__icono" style="--c:#4ea8ff">{{ icono('documento') }}</span></div>
+            <strong data-contador="{{ total_docs }}">{{ total_docs }}</strong><small>subidos en total</small>
           </div>
-          
-          <div class="timeline-item completed">
-            <div class="timeline-icon">✓</div>
-            <div class="timeline-content">
-              <h4>Documentos Enviados</h4>
-              <p>8 de enero, 2026</p>
-            </div>
+          <div class="dato-panel" data-aparecer style="--retraso:.06s">
+            <div class="dato-panel__cabeza">Aprobados <span class="dato-panel__icono" style="--c:#12a37b">{{ icono('ok') }}</span></div>
+            <strong data-contador="{{ approved_docs }}">{{ approved_docs }}</strong><small>validados por tu asesor</small>
           </div>
-          
-          <div class="timeline-item active">
-            <div class="timeline-icon">⏳</div>
-            <div class="timeline-content">
-              <h4>Revisión en Proceso</h4>
-              <p>En progreso</p>
-            </div>
+          <div class="dato-panel" data-aparecer style="--retraso:.12s">
+            <div class="dato-panel__cabeza">En revisión <span class="dato-panel__icono" style="--c:#f6b81a">{{ icono('reloj') }}</span></div>
+            <strong data-contador="{{ pending_docs }}">{{ pending_docs }}</strong><small>pendientes de revisar</small>
           </div>
-          
-          <div class="timeline-item">
-            <div class="timeline-icon">○</div>
-            <div class="timeline-content">
-              <h4>Entrevista Programada</h4>
-              <p>Pendiente</p>
-            </div>
+          <div class="dato-panel" data-aparecer style="--retraso:.18s">
+            <div class="dato-panel__cabeza">Rechazados <span class="dato-panel__icono" style="--c:#d8343f">{{ icono('x') }}</span></div>
+            <strong data-contador="{{ rejected_docs }}">{{ rejected_docs }}</strong><small>{{ 'hay que volver a subirlos' if rejected_docs else 'todo en orden' }}</small>
           </div>
-          
-          <div class="timeline-item">
-            <div class="timeline-icon">○</div>
-            <div class="timeline-content">
-              <h4>Aprobación Final</h4>
-              <p>Pendiente</p>
+        </div>
+
+        <div class="columnas">
+          <div class="tarjeta" data-observar>
+            <div class="tarjeta__cabeza"><h3>Estado de tu proceso</h3>{% if proceso %}<span class="estado estado--{{ estado }}">{{ estados_proceso.get(estado, estado) }}</span>{% endif %}</div>
+            <div class="progreso-cabeza"><span style="color:var(--texto-2)">Progreso del expediente</span><strong>{{ progreso }} %</strong></div>
+            <div class="barra-progreso barra-progreso--clara"><i data-ancho="{{ progreso }}%" style="width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)"></i></div>
+            <ol class="linea-tiempo">
+              <li class="hito hito--hecho"><span class="hito__marca">✓</span><div><h4>Cuenta creada</h4><p>Ya formas parte de MovesLocation</p></div></li>
+              <li class="hito {{ 'hito--hecho' if total_docs else 'hito--actual' }}"><span class="hito__marca">{{ '✓' if total_docs else '2' }}</span><div><h4>Documentos enviados</h4><p>{{ total_docs ~ ' documento' ~ ('s' if total_docs != 1 else '') ~ ' subido' ~ ('s' if total_docs != 1 else '') if total_docs else 'Sube tu pasaporte para empezar' }}</p></div></li>
+              <li class="hito {{ 'hito--hecho' if estado == 'completed' else 'hito--actual' if estado in ('in_review', 'pending') and total_docs else '' }}"><span class="hito__marca">{{ '✓' if estado == 'completed' else '3' }}</span><div><h4>Revisión del expediente</h4><p>{{ 'Revisado por tu asesor' if estado == 'completed' else 'Tu asesor está revisándolo' if estado == 'in_review' else 'Pendiente' }}</p></div></li>
+              <li class="hito {{ 'hito--hecho' if estado == 'completed' else '' }}"><span class="hito__marca">{{ '✓' if estado == 'completed' else '4' }}</span><div><h4>Resolución</h4><p>{{ '¡Aprobado! 🎉' if estado == 'completed' else 'Al final del proceso' }}</p></div></li>
+            </ol>
+          </div>
+
+          <div>
+            <div class="tarjeta">
+              <div class="tarjeta__cabeza"><h3>Tu asesor</h3></div>
+              {% if asesor %}
+                <div class="persona"><span class="avatar">{{ (asesor.first_name[:1] ~ asesor.last_name[:1]) | upper }}</span>
+                  <div><strong>{{ asesor.first_name }} {{ asesor.last_name }}</strong><small>Especialista en extranjería</small></div></div>
+                <a href="#mensajes" data-ir-a="mensajes" class="boton boton--suave boton--ancho" style="margin-top:18px">Escribirle un mensaje</a>
+              {% else %}
+                <p style="color:var(--texto-2);margin:0">Te asignaremos un asesor en cuanto revisemos tu caso.</p>
+              {% endif %}
+            </div>
+            <div class="tarjeta">
+              <div class="tarjeta__cabeza"><h3>Acciones rápidas</h3></div>
+              <div class="acciones-rapidas">
+                <a href="#documentos" data-ir-a="documentos" class="accion-rapida">{{ icono('subir') }} Subir documento</a>
+                <a href="#mensajes" data-ir-a="mensajes" class="accion-rapida">{{ icono('mensajes') }} Contactar asesor</a>
+                <a href="#proceso" data-ir-a="proceso" class="accion-rapida">{{ icono('proceso') }} Ver mi proceso</a>
+                <a href="/contact" class="accion-rapida">{{ icono('avion') }} Soporte</a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <!-- Acciones Rápidas -->
-      <div class="quick-actions">
-        <h2>Acciones Rápidas</h2>
-        <div class="actions-grid">
-          <button class="action-card" onclick="showDashboardSection('documents')">
-            <span class="action-icon">📤</span>
-            <span class="action-text">Subir Documento</span>
-          </button>
-          
-          <button class="action-card" onclick="showDashboardSection('messages')">
-            <span class="action-icon">💬</span>
-            <span class="action-text">Contactar Asesor</span>
-          </button>
-          
-          <button class="action-card">
-            <span class="action-icon">📅</span>
-            <span class="action-text">Agendar Cita</span>
-          </button>
-          
-          <button class="action-card">
-            <span class="action-icon">📊</span>
-            <span class="action-text">Ver Reporte</span>
-          </button>
-        </div>
-      </div>
-    </section>
+      <!-- ================= DOCUMENTOS ================= -->
+      <section id="documentos" class="panel__seccion oculto">
+        <form action="/upload_document" method="POST" enctype="multipart/form-data" class="zona-subida">
+          <h3 style="font-size:1.1rem">Subir un documento nuevo</h3>
+          <p style="color:var(--texto-2);font-size:.92rem">PDF, Word, JPG o PNG · máximo 5 MB.</p>
+          <div class="fila-campos">
+            <div class="campo">
+              <label for="tipo-documento">Tipo de documento</label>
+              <select id="tipo-documento" name="type_id" required>
+                <option value="">Selecciona el tipo…</option>
+                {% for dt in document_types %}<option value="{{ dt.id }}">{{ dt.name }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="campo">
+              <label for="archivo">Archivo</label>
+              <label class="selector-archivo">{{ icono('subir') }}
+                <span>Elegir archivo…</span>
+                <input type="file" id="archivo" name="file" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt">
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="boton boton--primario">Subir documento</button>
+        </form>
 
-    <!-- Sección: Documentos -->
-
-<section id="documents" class="dashboard-section hidden">
-  <div class="section-header">
-    <h1>Mis Documentos</h1>
-    <!-- Botón para abrir formulario -->
-    <button class="liquid-button primary" onclick="toggleUploadForm()">
-      <span>📤</span> Subir Nuevo Documento
-    </button>
-  </div>
-
-  <!-- Formulario de subida oculto inicialmente -->
-  <div id="upload-form-container" class="upload-form-container hidden">
-    <form action="/upload_document" method="POST" enctype="multipart/form-data">
-      <div class="form-group">
-        <label for="document_type">Tipo de Documento</label>
-        <select id="document_type" name="type_id" required>
-          <option value="">Selecciona el tipo de documento</option>
-          {% for dt in document_types %}
-            <option value="{{ dt.id }}">{{ dt.name }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="document_file">Archivo</label>
-        <input type="file" id="document_file" name="file" required>
-      </div>
-
-      <button type="submit" class="liquid-button primary">Subir Documento</button>
-      <button type="button" class="liquid-button secondary" onclick="toggleUploadForm()">Cancelar</button>
-    </form>
-  </div>
-
-  <div class="documents-grid">
-    {% for doc in documents %}
-      <div class="document-card">
-        <div class="document-icon">📄</div>
-        <div class="document-info">
-          <h4>{{ doc.type_name }}</h4>
-          <p>Subido el {{ doc.uploaded_at.strftime('%d de %B, %Y') if doc.uploaded_at else 'N/A' }}</p>
-          {% if doc.status == 'approved' %}
-            <span class="status-badge approved">Aprobado</span>
-          {% elif doc.status == 'pending' %}
-            <span class="status-badge pending">En Revisión</span>
+        <div class="tarjeta">
+          <div class="tarjeta__cabeza"><h3>Mis documentos</h3><small>{{ total_docs }} en total</small></div>
+          {% if documents %}
+            <div class="rejilla-documentos">
+              {% for doc in documents %}
+                <article class="documento">
+                  <div class="documento__icono">{{ (doc.file_path.rsplit('.', 1)[-1] if '.' in doc.file_path else 'DOC') | upper }}</div>
+                  <div>
+                    <h4>{{ doc.type_name }}</h4>
+                    <p>{{ doc.uploaded_at | fecha }}</p>
+                    <span class="estado estado--{{ doc.status }}">{{ estados_documento.get(doc.status, doc.status) }}</span>
+                    <div style="margin-top:8px"><a class="enlace" href="{{ url_for('uploaded_file', filename=doc.file_path) }}" target="_blank" rel="noopener">Ver archivo →</a></div>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
           {% else %}
-            <span class="status-badge">{{ doc.status }}</span>
+            <div class="vacio">{{ icono('documento') }}<p>Todavía no has subido documentos.</p></div>
           {% endif %}
         </div>
-      </div>
-    {% else %}
-      <p>No has subido documentos aún.</p>
-    {% endfor %}
-  </div>
-</section>
+      </section>
 
-<script>
-  function toggleUploadForm() {
-    const formContainer = document.getElementById('upload-form-container');
-    formContainer.classList.toggle('hidden');
-  }
-</script>
+      <!-- ================= PROCESO ================= -->
+      <section id="proceso" class="panel__seccion oculto">
+        {% for p in user_processes %}
+          <div class="tarjeta">
+            <div class="tarjeta__cabeza"><h3>{{ p.visa_type or 'Proceso migratorio' }}</h3><span class="estado estado--{{ p.status }}">{{ estados_proceso.get(p.status, p.status) }}</span></div>
+            <dl class="lista-detalles">
+              <div><dt>Destino</dt><dd>{{ p.destination_country or '—' }}</dd></div>
+              <div><dt>Tipo de visado</dt><dd>{{ p.visa_type or '—' }}</dd></div>
+              <div><dt>Fecha de inicio</dt><dd>{{ p.start_date | fecha }}</dd></div>
+              <div><dt>Asesor asignado</dt><dd>{{ p.advisor_name or 'Pendiente de asignar' }}</dd></div>
+              <div><dt>Última actualización</dt><dd>{{ p.updated_at | fecha(con_hora=True) }}</dd></div>
+              <div><dt>Nº de expediente</dt><dd>ML-{{ '%05d' | format(p.id) }}</dd></div>
+            </dl>
+          </div>
+        {% else %}
+          <div class="tarjeta vacio">{{ icono('proceso') }}<p>Aún no tienes un proceso abierto. Tu asesor lo creará cuando revise tus documentos.</p></div>
+        {% endfor %}
+      </section>
 
-
-<script>
-  // Mostrar/ocultar formulario de subida
-  function toggleUploadForm() {
-    const container = document.getElementById('upload-form-container');
-    container.classList.toggle('hidden');
-  }
-</script>
-
-
-    <!-- Sección: Mi Proceso -->
-    <section id="process" class="dashboard-section hidden">
-      <div class="process-details-card">
-  <h3>Detalles del Proceso</h3>
-  {% if user_processes %}
-    {% for p in user_processes %}
-      <div class="detail-row">
-        <span class="detail-label">ID Proceso:</span>
-        <span class="detail-value">{{ p.id }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Tipo de Visa:</span>
-        <span class="detail-value">{{ p.visa_type or 'N/A' }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">País de Destino:</span>
-        <span class="detail-value">{{ p.destination_country or 'N/A' }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Fecha de Inicio:</span>
-        <span class="detail-value">{{ p.start_date or 'N/A' }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Estado Actual:</span>
-        <span class="detail-value">{{ p.status }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Última Actualización:</span>
-        <span class="detail-value">{{ p.updated_at }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Asesor Asignado:</span>
-        <span class="detail-value">{{ p.advisor_name or 'N/A' }}</span>
-      </div>
-    {% endfor %}
-  {% else %}
-    <p>No tienes procesos registrados.</p>
-  {% endif %}
-</div>
-
-    </section>
-
-    <!-- Sección: Mensajes -->
-     <section id="messages" class="dashboard-section hidden">
-  <h2>Mis Mensajes</h2>
- <div class="messages-list">
-  {% for msg in messages %}
-    <div class="message-card {% if msg.sender_id == user.id %}sent{% else %}received{% endif %}">
-      <div class="message-avatar">
-        {{ msg.first_name[0] }}{{ msg.last_name[0] }}
-      </div>
-      <div class="message-content">
-        <p>{{ msg.content }}</p>
-        <span class="message-time">{{ msg.created_at.strftime('%d %b, %Y %H:%M') }}</span>
-      </div>
+      <!-- ================= MENSAJES ================= -->
+      <section id="mensajes" class="panel__seccion oculto">
+        <div class="tarjeta">
+          <div class="tarjeta__cabeza"><h3>Conversación con tu asesor</h3><small>{{ messages | length }} mensajes</small></div>
+          <div class="chat">
+            {% for msg in messages | reverse %}
+              <div class="burbuja {{ 'burbuja--mia' if msg.sender_id == user.id }}">
+                <span class="avatar">{{ (msg.first_name[:1] ~ msg.last_name[:1]) | upper }}</span>
+                <div class="burbuja__texto"><p>{{ msg.content }}</p><small>{{ msg.first_name }} · {{ msg.created_at | fecha(con_hora=True) }}</small></div>
+              </div>
+            {% else %}
+              <div class="vacio">{{ icono('mensajes') }}<p>Todavía no hay mensajes. ¡Saluda a tu asesor!</p></div>
+            {% endfor %}
+          </div>
+          <form action="/send_message" method="POST" class="enviar-mensaje">
+            <label class="sr-only" for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="message" placeholder="Escribe tu mensaje…" required maxlength="2000"></textarea>
+            <button type="submit" class="boton boton--primario">Enviar</button>
+          </form>
+        </div>
+      </section>
     </div>
-  {% else %}
-    <p>No tienes mensajes aún.</p>
-  {% endfor %}
+  </div>
 </div>
-
-<form action="/send_message" method="POST" class="send-message-form">
-  <textarea name="message" placeholder="Escribe tu mensaje..." required></textarea>
-  <button type="submit">Enviar</button>
-</form>
-    </section>
-  </main>
-  <script>
-  /* =========================
-     TOGGLE DE TEMA
-  ========================== */
-  const themeToggle = document.getElementById('theme-toggle');
-  const body = document.body;
-
-  themeToggle.addEventListener('change', () => {
-    body.classList.toggle('dark-mode', themeToggle.checked);
-    body.classList.toggle('light-mode', !themeToggle.checked);
-  });
-
-  /* =========================
-     DASHBOARD SECTIONS
-  ========================== */
-  function showDashboardSection(sectionId, event) {
-    // Ocultar todas las secciones
-    document.querySelectorAll('.dashboard-section').forEach(section => {
-      section.classList.add('hidden');
-    });
-
-    // Mostrar sección seleccionada
-    document.getElementById(sectionId).classList.remove('hidden');
-
-    // Quitar estado activo del menú
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.classList.remove('active');
-    });
-
-    // Marcar activo el item clicado
-    if (event) {
-      event.currentTarget.classList.add('active');
-    }
-  }
-
-  /* =========================
-     USER DROPDOWN MENU
-  ========================== */
-  const userMenu = document.querySelector('.user-menu');
-  const userDropdown = document.getElementById('user-dropdown');
-
-  function toggleUserMenu(event) {
-    event.stopPropagation();
-    userDropdown.classList.toggle('hidden');
-  }
-
-  // Cerrar menú al hacer click fuera
-  document.addEventListener('click', () => {
-    userDropdown.classList.add('hidden');
-  });
-
-  /* =========================
-     UPLOAD DOCUMENT FORM
-  ========================== */
-  function toggleUploadForm() {
-    const formContainer = document.getElementById('upload-form-container');
-    if (formContainer) {
-      formContainer.classList.toggle('hidden');
-    }
-  }
-</script>
-</body>
-</html>
-
-
+{% endblock %}

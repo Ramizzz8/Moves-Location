@@ -9,16 +9,5 @@
         </div>
       {% endfor %}
     </div>
-    <style>
-      .avisos-flash { position: fixed; top: 84px; right: 20px; z-index: 9998; display: grid; gap: 10px; max-width: min(420px, calc(100% - 40px)); }
-      .aviso-flash { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-radius: 10px; font: 14px/1.45 system-ui, sans-serif;
-                     background: #eff6ff; color: #1e3a8a; border-left: 4px solid #2563eb; box-shadow: 0 8px 24px rgba(15, 23, 42, .12); animation: aviso-entra .3s ease; }
-      .aviso-flash span { flex: 1; }
-      .aviso-flash button { background: none; border: 0; font-size: 20px; line-height: 1; cursor: pointer; color: inherit; opacity: .6; }
-      .aviso-success { background: #ecfdf5; color: #065f46; border-color: #10b981; }
-      .aviso-danger, .aviso-error { background: #fef2f2; color: #991b1b; border-color: #ef4444; }
-      .aviso-warning { background: #fffbeb; color: #92400e; border-color: #f59e0b; }
-      @keyframes aviso-entra { from { opacity: 0; transform: translateY(-8px); } }
-    </style>
   {% endif %}
 {% endwith %}

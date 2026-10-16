@@ -26,7 +26,7 @@ def test_create_advisor(client):
         'first_name': 'Adv',
         'last_name': 'Test',
         'email': 'advisor@test.com',
-        'password': '1234'
+        'password': 'Clave1234'
     }, follow_redirects=True)
 
     advisor = User.query.filter_by(email='advisor@test.com').first()

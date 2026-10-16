@@ -1,150 +1,48 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Inicia sesión en MovesLocation para gestionar tu proceso migratorio.">
-  <title>Iniciar Sesión - MovesLocation</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-</head>
-<body class="light-mode auth-page">
-  {% include '_avisos.html' %}
-  
-  <!-- Header minimalista -->
-  <header class="auth-header">
-    <a href="/" class="logo">
-  <img src="/static/images/logo.png" alt="MovesLocation">
-</a>
-    <div class="theme-switch-wrapper">
-      <label class="theme-switch">
-        <input type="checkbox" id="theme-toggle">
-        <span class="slider">
-          <span class="icon sun">☀️</span>
-          <span class="icon moon">🌙</span>
-        </span>
-      </label>
-    </div>
-  </header>
+{% extends 'base.html' %}
+{% block titulo %}Iniciar sesión{% endblock %}
+{% block descripcion %}Inicia sesión en MovesLocation para seguir tu proceso migratorio.{% endblock %}
 
-  <main class="auth-main">
-    <div class="auth-container">
-      <!-- Card de login -->
-      <div class="auth-card">
-        <div class="auth-header-content">
-          <h1>Bienvenido de nuevo</h1>
-          <p>Inicia sesión para continuar con tu proceso migratorio</p>
-        </div>
+{% block cuerpo %}
+<div class="acceso">
+  {% with frase_titulo='Cada viaje empieza con un primer paso.', frase_texto='Entra para ver en qué punto está tu expediente, subir documentos y hablar con tu asesor.' %}
+    {% include '_acceso_arte.html' %}
+  {% endwith %}
 
-        <form method="POST" action="/login" class="auth-form">
-          <div class="form-group">
-            <label for="email">Correo electrónico</label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              placeholder="tu@email.com" 
-              required 
-              autocomplete="email"
-            />
-          </div>
+  <main class="acceso__formulario">
+    <button class="boton-icono" type="button" data-cambiar-tema aria-label="Cambiar entre tema claro y oscuro">
+      <svg class="icono-sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+      <svg class="icono-luna" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+    </button>
 
-          <div class="form-group">
-            <label for="password">Contraseña</label>
-            <input 
-              type="password" 
-              id="password" 
-              name="password" 
-              placeholder="••••••••" 
-              required 
-              autocomplete="current-password"
-            />
-          </div>
+    <div class="acceso__caja" data-aparecer>
+      <a href="/" class="marca solo-movil" style="margin-bottom:28px"><img src="/static/images/logo.png" alt="MovesLocation" width="132" height="40"></a>
+      <h1>Bienvenido de nuevo</h1>
+      <p>Inicia sesión para continuar con tu proceso migratorio.</p>
 
-          <div class="form-options">
-            <label class="checkbox-label">
-              <input type="checkbox" name="remember" />
-              <span>Recuérdame</span>
-            </label>
-            <a href="/forgot-password" class="link-accent">¿Olvidaste tu contraseña?</a>
-          </div>
-
-          <button type="submit" class="liquid-button primary large full-width">
-            Iniciar Sesión
-          </button>
-        </form>
-
-        <div class="auth-divider">
-          <span>o continúa con</span>
-        </div>
-        <div class="social-login">
-          <button class="liquid-button social-button" onclick="loginWithGoogle()">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z" fill="#4285F4"/>
-              <path d="M10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20z" fill="#34A853"/>
-              <path d="M4.32 11.98c-.22-.59-.35-1.22-.35-1.98s.13-1.39.35-1.98V5.5H1.07C.39 6.85 0 8.35 0 10s.39 3.15 1.07 4.5l3.25-2.52z" fill="#FBBC05"/>
-              <path d="M10 3.87c1.45 0 2.76.5 3.78 1.48l2.84-2.84C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.5l3.25 2.52C5.12 5.61 7.36 3.87 10 3.87z" fill="#EA4335"/>
-            </svg>
-            Google
-          </button>
-          
-          <button class="liquid-button social-button" onclick="loginWithFacebook()">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M20 10c0-5.523-4.477-10-10-10S0 4.477 0 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V10h2.54V7.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V10h2.773l-.443 2.89h-2.33v6.988C16.343 19.128 20 14.991 20 10z" fill="#1877F2"/>
-            </svg>
-            Facebook
-          </button>
-        </div>
-
-        <div class="auth-footer">
-          <p>¿No tienes una cuenta? <a href="/register" class="link-accent">Regístrate</a></p>
+      {% if demo %}
+      <div class="demo-cuentas">
+        <p>🧪 Demo: entra con una cuenta de prueba</p>
+        <div>
+          <button type="button" data-cuenta="cliente@moves.demo">Cliente · Laura</button>
+          <button type="button" data-cuenta="admin@moves.demo">Administrador</button>
         </div>
       </div>
+      {% endif %}
+
+      <form method="POST" action="/login">
+        <div class="campo">
+          <label for="email">Correo electrónico</label>
+          <input type="email" id="email" name="email" placeholder="tu@email.com" required autocomplete="email" autofocus>
+        </div>
+        <div class="campo">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="boton boton--primario boton--grande boton--ancho" style="margin-top:8px">Iniciar sesión</button>
+      </form>
+
+      <p class="acceso__pie">¿Aún no tienes cuenta? <a href="/register">Regístrate gratis</a></p>
     </div>
   </main>
-
-  <script>
-    // Toggle de tema
-    const themeToggle = document.getElementById('theme-toggle');
-    const body = document.body;
-
-    themeToggle.addEventListener('change', () => {
-      if (themeToggle.checked) {
-        body.classList.remove('light-mode');
-        body.classList.add('dark-mode');
-      } else {
-        body.classList.remove('dark-mode');
-        body.classList.add('light-mode');
-      }
-    });
-
-    // Manejo del login
-    function handleLoginSubmit(event) {
-      event.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      
-      // Aquí iría la lógica de autenticación
-      console.log('Login attempt:', { email, password });
-      
-      // Simulación de login exitoso
-      // window.location.href = '/dashboard';
-      
-      return false;
-    }
-
-    // Login con Google
-    function loginWithGoogle() {
-      alert('Login con Google - Funcionalidad en desarrollo');
-    }
-
-    // Login con Facebook
-    function loginWithFacebook() {
-      alert('Login con Facebook - Funcionalidad en desarrollo');
-    }
-  </script>
-</body>
-</html>
-
+</div>
+{% endblock %}

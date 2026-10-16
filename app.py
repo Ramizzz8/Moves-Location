@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, flash, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, session, flash, url_for, send_from_directory, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
@@ -87,13 +87,51 @@ with app.app_context():
     db.create_all()
 
 AVISO_DEMO = (
-    '<style>body{padding-bottom:44px}</style>'
-    '<div style="position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#0f172a;color:#e2e8f0;'
-    'font:13px/1.4 system-ui,sans-serif;padding:8px 14px;text-align:center;box-shadow:0 -2px 12px rgba(0,0,0,.25)">'
-    '<strong style="color:#38bdf8">Demo de portafolio</strong> · Datos ficticios que se reinician cada noche · '
-    'Prueba con <code>cliente@moves.demo</code> o <code>admin@moves.demo</code> y la contraseña <code>Demo1234!</code>'
+    '<style>body{padding-bottom:42px}</style>'
+    '<div style="position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#0b1b33;color:#c9d6ee;'
+    'font:13px/1.4 Inter,system-ui,sans-serif;padding:9px 14px;text-align:center;border-top:2px solid #f6b81a">'
+    '<strong style="color:#f6b81a">Demo de portafolio</strong> · Datos ficticios que se reinician cada noche · '
+    'Entra con <code>cliente@moves.demo</code> o <code>admin@moves.demo</code> (contraseña <code>Demo1234!</code>)'
     '</div>'
 )
+
+# ---------- Datos y utilidades para las plantillas ----------
+ESTADOS_PROCESO = {'pending': 'Pendiente', 'in_review': 'En revisión', 'completed': 'Completado'}
+ESTADOS_DOCUMENTO = {'pending': 'En revisión', 'approved': 'Aprobado', 'rejected': 'Rechazado'}
+PAISES = [
+    ('AR', 'Argentina'), ('BO', 'Bolivia'), ('CL', 'Chile'), ('CO', 'Colombia'), ('CR', 'Costa Rica'), ('CU', 'Cuba'),
+    ('EC', 'Ecuador'), ('SV', 'El Salvador'), ('ES', 'España'), ('GT', 'Guatemala'), ('HN', 'Honduras'), ('MX', 'México'),
+    ('NI', 'Nicaragua'), ('PA', 'Panamá'), ('PY', 'Paraguay'), ('PE', 'Perú'), ('DO', 'República Dominicana'),
+    ('UY', 'Uruguay'), ('VE', 'Venezuela'), ('OTHER', 'Otro'),
+]
+MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
+
+
+@app.template_filter('fecha')
+def formatear_fecha(valor, con_hora=False):
+    """Fecha en español: «14 de octubre de 2026» (y la hora si se pide)."""
+    if not valor:
+        return '—'
+    if isinstance(valor, str):
+        try:
+            valor = datetime.fromisoformat(valor)
+        except ValueError:
+            return valor
+    texto = f'{valor.day} de {MESES[valor.month - 1]} de {valor.year}'
+    if con_hora and hasattr(valor, 'hour'):
+        texto += f' · {valor.hour:02d}:{valor.minute:02d}'
+    return texto
+
+
+@app.context_processor
+def datos_plantillas():
+    return {
+        'ahora': datetime.now(),
+        'demo': DEMO_MODE,
+        'paises': PAISES,
+        'estados_proceso': ESTADOS_PROCESO,
+        'estados_documento': ESTADOS_DOCUMENTO,
+    }
 
 
 @app.after_request
@@ -114,8 +152,8 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form.get('email', '')
+        password = request.form.get('password', '')
 
         user = User.query.filter_by(email=email).first()
 
@@ -132,7 +170,7 @@ def login():
             else:
                 return redirect('/dashboard')
 
-        flash('Credenciales incorrectas')
+        flash('Credenciales incorrectas. Revisa tu email y contraseña.', 'danger')
         return redirect('/login')
 
     return render_template('login.html')
@@ -150,17 +188,25 @@ def login_required(f):
 def register():
     if request.method == 'POST':
         # Obtener todos los campos del formulario
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        email = request.form['email']
-        phone = request.form.get('phone')  # opcional
-        country = request.form['country']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
+        first_name = request.form.get('first_name', '').strip()
+        last_name = request.form.get('last_name', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip() or None  # opcional
+        country = request.form.get('country', '').strip()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
 
-        # Validaciones
+        # Validaciones (el navegador también valida, pero no basta)
+        if not all([first_name, last_name, email, country]) or '@' not in email:
+            flash('Revisa los datos: nombre, apellidos, email y país son obligatorios.', 'danger')
+            return redirect('/register')
+
         if password != confirm_password:
-            flash('Las contraseñas no coinciden')
+            flash('Las contraseñas no coinciden', 'danger')
+            return redirect('/register')
+
+        if len(password) < 8:
+            flash('La contraseña debe tener al menos 8 caracteres.', 'danger')
             return redirect('/register')
 
         if User.query.filter_by(email=email).first():
@@ -183,8 +229,11 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        # Iniciar sesión automáticamente
+        # Iniciar sesión automáticamente (antes faltaba el rol y el panel expulsaba al usuario)
+        session.clear()
         session['user_id'] = new_user.id
+        session['role'] = 'client'
+        flash(f'¡Bienvenido, {first_name}! Tu cuenta está lista.', 'success')
         return redirect('/dashboard')
 
     return render_template('register.html')
@@ -220,7 +269,7 @@ def dashboard():
     # Mensajes (enviados y recibidos por el usuario)
     messages = db.session.execute(
         text('''
-            SELECT m.id, m.content, m.created_at, m.sender_id, u.first_name, u.last_name
+            SELECT m.id, m.content, m.created_at, m.sender_id, m.is_read, u.first_name, u.last_name
             FROM messages m
             JOIN user u ON m.sender_id = u.id
             WHERE m.sender_id = :user_id OR m.receiver_id = :user_id
@@ -232,10 +281,22 @@ def dashboard():
     total_docs = len(documents)
     approved_docs = sum(1 for d in documents if d.status == 'approved')
     pending_docs = sum(1 for d in documents if d.status == 'pending')
+    rejected_docs = sum(1 for d in documents if d.status == 'rejected')
+
+    # Asesor: el del proceso más reciente o, si no, el asignado al cliente
+    asesor_id = user_processes[0].advisor_id if user_processes and user_processes[0].advisor_id else user.advisor_id
+    asesor = db.session.get(User, asesor_id) if asesor_id else None
+
+    # Al abrir el panel, los mensajes recibidos se marcan como leídos
+    # (la plantilla recibe el estado anterior, así se ve cuántos eran nuevos)
+    db.session.execute(text('UPDATE messages SET is_read = TRUE WHERE receiver_id = :user_id AND is_read = FALSE'), {'user_id': user_id})
+    db.session.commit()
 
     return render_template(
         'dashboard.html',
         user=user,
+        asesor=asesor,
+        rejected_docs=rejected_docs,
         documents=documents,
         document_types=document_types,
         user_processes=user_processes,
@@ -296,11 +357,15 @@ def admin_required(f):
 @admin_required
 def admin_dashboard():
     advisors = User.query.filter_by(role='advisor').order_by(User.id.desc()).all()
-    clientes = User.query.filter_by(role='client').order_by(User.id.desc()).limit(10).all()
+    clientes = User.query.filter_by(role='client').order_by(User.id.desc()).limit(200).all()
+    admin = db.session.get(User, session['user_id'])
+    if admin is None:
+        session.clear()
+        return redirect('/login')
 
     procesos = db.session.execute(
         text('''
-            SELECT p.id, p.user_id, p.status, p.updated_at,
+            SELECT p.id, p.user_id, p.status, p.updated_at, p.visa_type, p.destination_country, p.advisor_name,
                    u.first_name, u.last_name
             FROM processes p
             JOIN user u ON p.user_id = u.id
@@ -322,8 +387,27 @@ def admin_dashboard():
         ).fetchall()
         documentos_por_usuario[cliente.id] = docs
 
+    por_estado = {}
+    for p in procesos:
+        por_estado[p.status] = por_estado.get(p.status, 0) + 1
+    stats = {
+        'clientes': User.query.filter_by(role='client').count(),
+        'procesos': len(procesos),
+        'activos': len(procesos) - por_estado.get('completed', 0),
+        'por_estado': por_estado,
+        'docs_pendientes': db.session.execute(text("SELECT COUNT(*) FROM documents WHERE status = 'pending'")).scalar(),
+        'sin_asesor': User.query.filter_by(role='client', advisor_id=None).count(),
+    }
+    clientes_por_asesor = {}
+    for c in clientes:
+        if c.advisor_id:
+            clientes_por_asesor[c.advisor_id] = clientes_por_asesor.get(c.advisor_id, 0) + 1
+
     return render_template(
         'admin_dashboard.html',
+        admin=admin,
+        stats=stats,
+        clientes_por_asesor=clientes_por_asesor,
         clientes=clientes,
         procesos=procesos,
         advisors=advisors,
@@ -334,14 +418,18 @@ def admin_dashboard():
 @app.route('/admin/add_advisor', methods=['POST'])
 @admin_required
 def add_advisor():
-    first_name = request.form['first_name']
-    last_name = request.form['last_name']
-    email = request.form['email']
-    password = request.form['password']
+    first_name = request.form.get('first_name', '').strip()
+    last_name = request.form.get('last_name', '').strip()
+    email = request.form.get('email', '').strip()
+    password = request.form.get('password', '')
+
+    if not all([first_name, last_name, email]) or len(password) < 8:
+        flash('Completa todos los campos (contraseña de 8 caracteres o más).', 'danger')
+        return redirect('/admin/dashboard#asesores')
 
     if User.query.filter_by(email=email).first():
         flash('El correo ya está registrado', 'danger')
-        return redirect('/admin/dashboard')
+        return redirect('/admin/dashboard#asesores')
 
     hashed_password = generate_password_hash(password)
 
@@ -362,46 +450,58 @@ def add_advisor():
 def assign_advisor_to_client(client_id):
     advisor_id = request.form.get('advisor_id')
 
-    if not advisor_id:
+    asesor = db.session.get(User, int(advisor_id)) if advisor_id and advisor_id.isdigit() else None
+    if not asesor or asesor.role != 'advisor':
         flash('Debes seleccionar un asesor', 'danger')
-        return redirect('/admin/dashboard')
+        return redirect('/admin/dashboard#clientes')
 
     # Buscar el cliente
-    cliente = User.query.get(client_id)
+    cliente = db.session.get(User, client_id)
     if not cliente or cliente.role != 'client':
         flash('Cliente no encontrado', 'danger')
-        return redirect('/admin/dashboard')
+        return redirect('/admin/dashboard#clientes')
 
-    # Asignar el asesor
-    cliente.advisor_id = int(advisor_id)
+    # Asignar el asesor al cliente y a sus procesos: los mensajes del cliente
+    # se envían al asesor del proceso, así que ambos deben coincidir
+    cliente.advisor_id = asesor.id
+    db.session.execute(
+        text('UPDATE processes SET advisor_id = :a, advisor_name = :n WHERE user_id = :u'),
+        {'a': asesor.id, 'n': f'{asesor.first_name} {asesor.last_name}', 'u': cliente.id},
+    )
     db.session.commit()
-    flash(f'Asesor asignado correctamente a {cliente.first_name} {cliente.last_name}', 'success')
-    return redirect('/admin/dashboard')
+    flash(f'{asesor.first_name} {asesor.last_name} es ahora el asesor de {cliente.first_name} {cliente.last_name}', 'success')
+    return redirect('/admin/dashboard#clientes')
 
 # NUEVO: Cambiar estado del proceso
 @app.route('/admin/process/<int:id>/status', methods=['POST'])
 @admin_required
 def cambiar_status(id):
-    nuevo_status = request.form['status']
+    nuevo_status = request.form.get('status')
+    if nuevo_status not in ESTADOS_PROCESO:
+        flash('Estado no válido', 'danger')
+        return redirect('/admin/dashboard#procesos')
     proceso = db.session.execute(text('SELECT * FROM processes WHERE id = :id'), {'id': id}).first()
 
     if proceso:
         db.session.execute(text('UPDATE processes SET status = :status WHERE id = :id'), {'status': nuevo_status, 'id': id})
         db.session.commit()
-        flash('Estado del proceso actualizado')
-    return redirect('/admin/dashboard')
+        flash(f'Proceso marcado como «{ESTADOS_PROCESO[nuevo_status].lower()}»', 'success')
+    return redirect('/admin/dashboard#procesos')
 # NUEVO: Cambiar estado del documento
 @app.route('/admin/document/<int:id>/status', methods=['POST'])
 @admin_required
 def change_document_status(id):
-    nuevo_status = request.form['status']
+    nuevo_status = request.form.get('status')
+    if nuevo_status not in ESTADOS_DOCUMENTO:
+        flash('Estado no válido', 'danger')
+        return redirect('/admin/dashboard#documentos')
     db.session.execute(
         text('UPDATE documents SET status = :status WHERE id = :id'),
         {'status': nuevo_status, 'id': id}
     )
     db.session.commit()
-    flash('Estado del documento actualizado', 'success')
-    return redirect('/admin/dashboard#admin-documents')
+    flash(f'Documento marcado como «{ESTADOS_DOCUMENTO[nuevo_status].lower()}»', 'success')
+    return redirect('/admin/dashboard#documentos')
     
 
 
@@ -414,11 +514,11 @@ def upload_document():
 
     if not file or not type_id:
         flash('Por favor selecciona un archivo y tipo de documento', 'danger')
-        return redirect('/dashboard#documents')
+        return redirect('/dashboard#documentos')
 
     if not allowed_file(file.filename):
         flash('Tipo de archivo no permitido. Solo PDF, JPG, JPEG, PNG.', 'danger')
-        return redirect('/dashboard#documents')
+        return redirect('/dashboard#documentos')
 
     # Guardar archivo de forma segura
     filename = secure_filename(file.filename)
@@ -445,11 +545,19 @@ def upload_document():
     
 
     flash('Documento subido correctamente y en revisión', 'success')
-    return redirect('/dashboard#documents')
+    return redirect('/dashboard#documentos')
 # Ruta para servir archivos subidos
 @app.route('/uploads/<filename>')
 @login_required
 def uploaded_file(filename):
+    # Antes cualquier usuario con sesión podía descargar los documentos de otros
+    if session.get('role') != 'admin':
+        propio = db.session.execute(
+            text('SELECT 1 FROM documents WHERE file_path = :f AND user_id = :u'),
+            {'f': filename, 'u': session['user_id']},
+        ).first()
+        if not propio:
+            abort(404)
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 # NUEVO: Enviar mensaje al asesor
@@ -457,32 +565,33 @@ def uploaded_file(filename):
 @login_required
 def send_message():
     sender_id = session['user_id']
-    content = request.form.get('message')
+    content = (request.form.get('message') or '').strip()[:2000]
 
     if not content:
         flash('El mensaje no puede estar vacío', 'danger')
-        return redirect('/dashboard#messages')
+        return redirect('/dashboard#mensajes')
 
-    # Buscar asesor asignado
-    # Aquí asumimos que el primer proceso asigna un asesor
+    # Asesor del proceso más reciente o, si no tiene proceso, el asignado al cliente
     process = db.session.execute(
         text('SELECT advisor_id FROM processes WHERE user_id = :user_id ORDER BY updated_at DESC LIMIT 1'),
         {'user_id': sender_id}
     ).fetchone()
+    remitente = db.session.get(User, sender_id)
+    asesor_id = (process.advisor_id if process and process.advisor_id else None) or (remitente.advisor_id if remitente else None)
 
-    if not process or not process.advisor_id:
-        flash('No tienes un asesor asignado aún', 'warning')
-        return redirect('/dashboard#messages')
+    if not asesor_id:
+        flash('Todavía no tienes un asesor asignado. Te avisaremos en cuanto lo tengas.', 'warning')
+        return redirect('/dashboard#mensajes')
 
     new_message = Message(
         sender_id=sender_id,
-        receiver_id=process.advisor_id,
+        receiver_id=asesor_id,
         content=content
     )
     db.session.add(new_message)
     db.session.commit()
     flash('Mensaje enviado correctamente', 'success')
-    return redirect('/dashboard#messages')
+    return redirect('/dashboard#mensajes')
 
 
 if __name__ == '__main__':

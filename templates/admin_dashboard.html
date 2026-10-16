@@ -1,283 +1,222 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard - MovesLocation</title>
-  <link rel="stylesheet" href="/static/css/style.css">
-  <link rel="stylesheet" href="/static/css/admin_dashboard.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-</head>
-<body class="light-mode admin-page">
-  {% include '_avisos.html' %}
-  
-  <!-- Sidebar de Administración -->
-  <aside class="admin-sidebar">
-    <div class="sidebar-header">
-      <a href="/" class="logo">
-        <img src="/static/images/logo.png" alt="MovesLocation">
+{% extends 'base.html' %}
+{% from '_iconos.html' import icono %}
+{% block titulo %}Administración{% endblock %}
+
+{% block cuerpo %}
+{% set total_procesos = stats.procesos or 1 %}
+<div class="panel">
+  <aside class="panel__lateral">
+    <a href="/" class="marca"><img src="/static/images/logo.png" alt="MovesLocation" width="128" height="38"></a>
+    <nav class="panel__nav" aria-label="Administración">
+      <a href="#resumen" data-pestana="resumen" data-titulo="Resumen" class="activo">{{ icono('resumen') }} Resumen</a>
+      <a href="#clientes" data-pestana="clientes" data-titulo="Clientes">{{ icono('clientes') }} Clientes</a>
+      <a href="#procesos" data-pestana="procesos" data-titulo="Procesos">{{ icono('proceso') }} Procesos</a>
+      <a href="#documentos" data-pestana="documentos" data-titulo="Documentos">{{ icono('documento') }} Documentos
+        {% if stats.docs_pendientes %}<span class="contador">{{ stats.docs_pendientes }}</span>{% endif %}
       </a>
-    </div>
-    <nav class="sidebar-nav">
-      <a href="#clientes" class="nav-item active" data-section="clientes">
-        <span class="nav-icon">👥</span>
-        <span class="nav-text">Clientes</span>
-      </a>
-      <a href="#admin-processes" class="nav-item" data-section="admin-processes">
-        <span class="nav-icon">🔄</span>
-        <span class="nav-text">Procesos</span>
-      </a>
-      <a href="#admin-documents" class="nav-item" data-section="admin-documents">
-        <span class="nav-icon">📂</span>
-        <span class="nav-text">Documentos</span>
-      </a>
+      <a href="#asesores" data-pestana="asesores" data-titulo="Asesores">{{ icono('asesores') }} Asesores</a>
     </nav>
-    <div class="sidebar-footer">
-      <a href="/logout" class="liquid-button outline full-width">
-        <span>Cerrar Sesión</span>
-      </a>
+    <div class="panel__usuario">
+      <span class="avatar">{{ (admin.first_name[:1] ~ admin.last_name[:1]) | upper }}</span>
+      <div><strong>{{ admin.first_name }} {{ admin.last_name }}</strong><small>Administración</small></div>
+      <a href="/logout" title="Cerrar sesión" aria-label="Cerrar sesión">{{ icono('salir') }}</a>
     </div>
   </aside>
 
-  <main class="admin-main">
-    <!-- Barra Superior Mejorada -->
-    <header class="admin-top-bar">
-      <div class="search-bar">
-        <input type="text" placeholder="Buscar cliente o trámite...">
+  <div class="panel__principal">
+    <header class="panel__barra">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="boton-icono solo-movil" type="button" data-abrir-lateral aria-label="Abrir menú">{{ icono('menu') }}</button>
+        <div><small>Panel de administración</small><h1 data-titulo-panel>Resumen</h1></div>
       </div>
-      
-      <div class="admin-actions">
-        <div class="theme-switch-wrapper">
-          <label class="theme-switch">
-            <input type="checkbox" id="theme-toggle">
-            <span class="slider">
-              <span class="icon sun">☀️</span>
-              <span class="icon moon">🌙</span>
-            </span>
-          </label>
-        </div>
-        
-        <div class="admin-profile">
-          <div class="admin-info">
-            <span class="admin-name">Admin {{ current_user.first_name if current_user else 'Muvini' }}</span>
-            <span class="admin-role">Data Analytics</span>
-          </div>
-          <div class="avatar">M</div>
-        </div>
+      <div class="panel__barra-acciones">
+        <label class="buscador">{{ icono('buscar') }}<span class="sr-only">Buscar</span>
+          <input type="search" placeholder="Buscar cliente, email o trámite…" data-buscar>
+        </label>
+        <button class="boton-icono" type="button" data-cambiar-tema aria-label="Cambiar entre tema claro y oscuro">
+          <svg class="icono-sol" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+          <svg class="icono-luna" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+        </button>
       </div>
     </header>
 
-    <!-- CLIENTES RECIENTES -->
-    <section id="clientes" class="admin-section">
-      <div class="section-header">
-        <h1>Últimos Clientes Registrados</h1>
-      </div>
-      <div class="admin-card table-card">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>País</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for c in clientes %}
-            <tr>
-              <td>{{ c.id }}</td>
-              <td><strong>{{ c.first_name }} {{ c.last_name }}</strong></td>
-              <td>{{ c.email }}</td>
-              <td><span class="country-tag">{{ c.country or 'N/A' }}</span></td>
-            </tr>
-            {% else %}
-            <tr><td colspan="4" class="empty-msg">No hay clientes registrados</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- PROCESOS -->
-    <section id="admin-processes" class="admin-section hidden">
-      <div class="section-header">
-        <h2>Procesos de Clientes</h2>
-      </div>
-      <div class="admin-card table-card">
-        <table class="admin-table">
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Estado</th>
-              <th>Actualización</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for p in procesos %}
-            <tr>
-              <td>{{ p.first_name }} {{ p.last_name }}</td>
-              <td>
-                <span class="status-badge {{ p.status }}">
-                  {{ 'Pendiente' if p.status == 'pending' else 'Revisión' if p.status == 'in_review' else 'Completado' }}
-                </span>
-              </td>
-              <td>{{ p.updated_at.strftime('%d/%m/%Y') if p.updated_at else 'N/A' }}</td>
-              <td>
-                <form action="/admin/process/{{ p.id }}/status" method="POST" class="inline-form">
-                  <select name="status" class="admin-select">
-                    <option value="pending" {% if p.status=='pending' %}selected{% endif %}>Pendiente</option>
-                    <option value="in_review" {% if p.status=='in_review' %}selected{% endif %}>En Revisión</option>
-                    <option value="completed" {% if p.status=='completed' %}selected{% endif %}>Completado</option>
-                  </select>
-                  <button type="submit" class="action-btn mini">Actualizar</button>
-                </form>
-              </td>
-            </tr>
-            {% else %}
-            <tr><td colspan="4" class="empty-msg">No hay procesos registrados</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- DOCUMENTOS POR USUARIO -->
-    <section id="admin-documents" class="admin-section hidden">
-      <div class="section-header">
-        <h2>Documentos de Usuarios</h2>
-      </div>
-
-      {% for cliente in clientes %}
-      <div class="user-accordion-card">
-        <button class="user-accordion-header" onclick="toggleDocuments(this, 'docs-{{ cliente.id }}')">
-          <span class="user-info">👤 {{ cliente.first_name }} {{ cliente.last_name }}</span>
-          <span class="arrow">▼</span>
-        </button>
-
-        <div class="user-documents-content hidden" id="docs-{{ cliente.id }}">
-          {% set user_docs = documentos_por_usuario[cliente.id] %}
-          {% if user_docs %}
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Tipo</th>
-                <th>Archivo</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for doc in user_docs %}
-              <tr>
-                <td>{{ doc.type_name }}</td>
-                <td><a href="{{ url_for('uploaded_file', filename=doc.file_path) }}" target="_blank" class="link-accent">Ver Archivo</a></td>
-                <td>{{ doc.uploaded_at.strftime('%d/%m/%Y') }}</td>
-                <td><span class="status-badge {{ doc.status }}">{{ doc.status }}</span></td>
-                <td>
-                  <form method="POST" action="{{ url_for('change_document_status', id=doc.id) }}" class="inline-form">
-                    <select name="status" required class="admin-select">
-                      <option value="pending" {% if doc.status=='pending' %}selected{% endif %}>Revisión</option>
-                      <option value="approved" {% if doc.status=='approved' %}selected{% endif %}>Aprobar</option>
-                      <option value="rejected" {% if doc.status=='rejected' %}selected{% endif %}>Rechazar</option>
-                    </select>
-                    <button type="submit" class="action-btn mini">OK</button>
-                  </form>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-          {% else %}
-          <p class="empty-msg">Sin documentos subidos.</p>
-          {% endif %}
+    <div class="panel__contenido">
+      <!-- ================= RESUMEN ================= -->
+      <section id="resumen" class="panel__seccion">
+        <div class="bienvenida">
+          <div class="globo-mini">{% include '_globo.html' %}</div>
+          <h2>Hola, {{ admin.first_name }} 👋</h2>
+          <p>Hay <strong>{{ stats.docs_pendientes }}</strong> documento{{ 's' if stats.docs_pendientes != 1 }} esperando revisión y
+            <strong>{{ stats.sin_asesor }}</strong> cliente{{ 's' if stats.sin_asesor != 1 }} sin asesor asignado.</p>
         </div>
-      </div>
-      {% endfor %}
-    </section>
-  </main>
 
-  <script>
-    // ====== NAVEGACIÓN DEL SIDEBAR ======
-    const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
-    const sections = document.querySelectorAll('.admin-section');
+        <div class="tarjetas-datos">
+          <div class="dato-panel" data-aparecer><div class="dato-panel__cabeza">Clientes <span class="dato-panel__icono" style="--c:#4ea8ff">{{ icono('clientes') }}</span></div><strong data-contador="{{ stats.clientes }}">{{ stats.clientes }}</strong><small>registrados</small></div>
+          <div class="dato-panel" data-aparecer style="--retraso:.06s"><div class="dato-panel__cabeza">Procesos activos <span class="dato-panel__icono" style="--c:#f6b81a">{{ icono('proceso') }}</span></div><strong data-contador="{{ stats.activos }}">{{ stats.activos }}</strong><small>de {{ stats.procesos }} en total</small></div>
+          <div class="dato-panel" data-aparecer style="--retraso:.12s"><div class="dato-panel__cabeza">Por revisar <span class="dato-panel__icono" style="--c:#d8343f">{{ icono('documento') }}</span></div><strong data-contador="{{ stats.docs_pendientes }}">{{ stats.docs_pendientes }}</strong><small>documentos pendientes</small></div>
+          <div class="dato-panel" data-aparecer style="--retraso:.18s"><div class="dato-panel__cabeza">Asesores <span class="dato-panel__icono" style="--c:#12a37b">{{ icono('asesores') }}</span></div><strong data-contador="{{ advisors | length }}">{{ advisors | length }}</strong><small>en el equipo</small></div>
+        </div>
 
-    navItems.forEach(item => {
-      item.addEventListener('click', (e) => {
-        e.preventDefault();
-        
-        // Remover clase active de todos los items
-        navItems.forEach(nav => nav.classList.remove('active'));
-        
-        // Agregar clase active al item clickeado
-        item.classList.add('active');
-        
-        // Obtener la sección a mostrar
-        const targetSection = item.getAttribute('data-section');
-        
-        // Ocultar todas las secciones
-        sections.forEach(section => section.classList.add('hidden'));
-        
-        // Mostrar solo la sección target
-        const sectionToShow = document.getElementById(targetSection);
-        if (sectionToShow) {
-          sectionToShow.classList.remove('hidden');
-        }
-      });
-    });
+        <div class="columnas">
+          <div class="tarjeta" data-observar>
+            <div class="tarjeta__cabeza"><h3>Procesos por estado</h3><small>{{ stats.procesos }} procesos</small></div>
+            <div class="grafica-estados">
+              {% for clave, color in [('pending', '#f6b81a'), ('in_review', '#4ea8ff'), ('completed', '#12a37b')] %}
+                {% set n = stats.por_estado.get(clave, 0) %}
+                <div class="barra-estado"><span>{{ estados_proceso[clave] }}</span><div class="pista"><i data-ancho="{{ (n / total_procesos * 100) | round(1) }}%" style="background:{{ color }}"></i></div><strong>{{ n }}</strong></div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__cabeza"><h3>Últimos movimientos</h3></div>
+            <dl class="lista-detalles">
+              {% for p in procesos[:5] %}
+                <div><dt>{{ p.first_name }} {{ p.last_name }} · {{ p.destination_country or '—' }}</dt><dd><span class="estado estado--{{ p.status }}">{{ estados_proceso.get(p.status, p.status) }}</span></dd></div>
+              {% else %}
+                <div><dt>Sin procesos todavía</dt><dd></dd></div>
+              {% endfor %}
+            </dl>
+          </div>
+        </div>
+      </section>
 
-    // ====== TOGGLE DE ACORDEONES ======
-    function toggleDocuments(button, id) {
-      const content = document.getElementById(id);
-      content.classList.toggle('hidden');
-      
-      // Rotar la flecha
-      button.classList.toggle('open');
-    }
+      <!-- ================= CLIENTES ================= -->
+      <section id="clientes" class="panel__seccion oculto">
+        <div class="tarjeta">
+          <div class="tarjeta__cabeza"><h3>Clientes registrados</h3><small>{{ clientes | length }} clientes</small></div>
+          <div class="tabla-envoltorio" data-filtrable>
+            <table class="tabla">
+              <thead><tr><th>Cliente</th><th>País</th><th>Teléfono</th><th>Asesor asignado</th></tr></thead>
+              <tbody>
+                {% for c in clientes %}
+                  <tr>
+                    <td><div class="persona"><span class="avatar">{{ (c.first_name[:1] ~ c.last_name[:1]) | upper }}</span><div><strong>{{ c.first_name }} {{ c.last_name }}</strong><small>{{ c.email }}</small></div></div></td>
+                    <td><span class="pais">{{ c.country or '—' }}</span></td>
+                    <td>{{ c.phone or '—' }}</td>
+                    <td>
+                      <form action="/admin/assign_advisor/{{ c.id }}" method="POST" class="form-linea">
+                        <select name="advisor_id" required aria-label="Asesor de {{ c.first_name }}">
+                          <option value="">Sin asignar</option>
+                          {% for a in advisors %}<option value="{{ a.id }}" {{ 'selected' if c.advisor_id == a.id }}>{{ a.first_name }} {{ a.last_name }}</option>{% endfor %}
+                        </select>
+                        <button type="submit" class="boton-mini">Guardar</button>
+                      </form>
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr><td colspan="4" class="vacio">No hay clientes registrados.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-    // ====== THEME TOGGLE ======
-    const themeToggle = document.getElementById('theme-toggle');
-    
-    // Cargar tema guardado
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-      document.body.classList.remove('light-mode');
-      document.body.classList.add('dark-mode');
-      themeToggle.checked = true;
-    }
+      <!-- ================= PROCESOS ================= -->
+      <section id="procesos" class="panel__seccion oculto">
+        <div class="tarjeta">
+          <div class="tarjeta__cabeza"><h3>Procesos migratorios</h3><small>{{ procesos | length }} procesos</small></div>
+          <div class="tabla-envoltorio" data-filtrable>
+            <table class="tabla">
+              <thead><tr><th>Cliente</th><th>Trámite</th><th>Estado</th><th>Actualizado</th><th>Cambiar estado</th></tr></thead>
+              <tbody>
+                {% for p in procesos %}
+                  <tr>
+                    <td><div class="persona"><span class="avatar">{{ (p.first_name[:1] ~ p.last_name[:1]) | upper }}</span><div><strong>{{ p.first_name }} {{ p.last_name }}</strong><small>Asesor: {{ p.advisor_name or 'sin asignar' }}</small></div></div></td>
+                    <td>{{ p.visa_type or '—' }}<br><small style="color:var(--texto-3)">{{ p.destination_country or '' }}</small></td>
+                    <td><span class="estado estado--{{ p.status }}">{{ estados_proceso.get(p.status, p.status) }}</span></td>
+                    <td>{{ p.updated_at | fecha }}</td>
+                    <td>
+                      <form action="/admin/process/{{ p.id }}/status" method="POST" class="form-linea">
+                        <select name="status" aria-label="Estado del proceso">
+                          {% for clave, nombre in estados_proceso.items() %}<option value="{{ clave }}" {{ 'selected' if p.status == clave }}>{{ nombre }}</option>{% endfor %}
+                        </select>
+                        <button type="submit" class="boton-mini">Actualizar</button>
+                      </form>
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr><td colspan="5" class="vacio">No hay procesos registrados.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
 
-    themeToggle.addEventListener('change', () => {
-      if (themeToggle.checked) {
-        document.body.classList.remove('light-mode');
-        document.body.classList.add('dark-mode');
-        localStorage.setItem('theme', 'dark');
-      } else {
-        document.body.classList.remove('dark-mode');
-        document.body.classList.add('light-mode');
-        localStorage.setItem('theme', 'light');
-      }
-    });
+      <!-- ================= DOCUMENTOS ================= -->
+      <section id="documentos" class="panel__seccion oculto" data-filtrable>
+        {% for cliente in clientes %}
+          {% set docs = documentos_por_usuario[cliente.id] %}
+          {% set pendientes = docs | selectattr('status', 'equalto', 'pending') | list | length %}
+          <details class="acordeon" {{ 'open' if pendientes }}>
+            <summary>
+              <span class="avatar" style="width:34px;height:34px;font-size:.75rem">{{ (cliente.first_name[:1] ~ cliente.last_name[:1]) | upper }}</span>
+              {{ cliente.first_name }} {{ cliente.last_name }}
+              <span class="cantidad">{{ docs | length }} documento{{ 's' if docs | length != 1 }}{% if pendientes %} · <span class="estado estado--pending">{{ pendientes }} por revisar</span>{% endif %}</span>
+            </summary>
+            {% if docs %}
+              <div class="tabla-envoltorio">
+                <table class="tabla">
+                  <thead><tr><th>Tipo</th><th>Subido</th><th>Estado</th><th>Revisar</th></tr></thead>
+                  <tbody>
+                    {% for doc in docs %}
+                      <tr>
+                        <td><a class="enlace" href="{{ url_for('uploaded_file', filename=doc.file_path) }}" target="_blank" rel="noopener">{{ doc.type_name }} ↗</a></td>
+                        <td>{{ doc.uploaded_at | fecha }}</td>
+                        <td><span class="estado estado--{{ doc.status }}">{{ estados_documento.get(doc.status, doc.status) }}</span></td>
+                        <td>
+                          <form method="POST" action="{{ url_for('change_document_status', id=doc.id) }}" class="form-linea">
+                            <select name="status" aria-label="Estado del documento">
+                              {% for clave, nombre in estados_documento.items() %}<option value="{{ clave }}" {{ 'selected' if doc.status == clave }}>{{ nombre }}</option>{% endfor %}
+                            </select>
+                            <button type="submit" class="boton-mini">Guardar</button>
+                          </form>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <p class="vacio" style="padding:18px">Este cliente aún no ha subido documentos.</p>
+            {% endif %}
+          </details>
+        {% endfor %}
+      </section>
 
-    // ====== BÚSQUEDA EN TIEMPO REAL ======
-    const searchInput = document.querySelector('.search-bar input');
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const tableRows = document.querySelectorAll('.admin-table tbody tr');
-        
-        tableRows.forEach(row => {
-          const text = row.textContent.toLowerCase();
-          if (text.includes(searchTerm)) {
-            row.style.display = '';
-          } else {
-            row.style.display = 'none';
-          }
-        });
-      });
-    }
-  </script>
-</body>
-</html>
+      <!-- ================= ASESORES ================= -->
+      <section id="asesores" class="panel__seccion oculto">
+        <div class="columnas">
+          <div class="tarjeta">
+            <div class="tarjeta__cabeza"><h3>Equipo de asesores</h3><small>{{ advisors | length }} asesores</small></div>
+            <div class="tabla-envoltorio" data-filtrable>
+              <table class="tabla">
+                <thead><tr><th>Asesor</th><th>Clientes asignados</th></tr></thead>
+                <tbody>
+                  {% for a in advisors %}
+                    <tr>
+                      <td><div class="persona"><span class="avatar">{{ (a.first_name[:1] ~ a.last_name[:1]) | upper }}</span><div><strong>{{ a.first_name }} {{ a.last_name }}</strong><small>{{ a.email }}</small></div></div></td>
+                      <td><strong>{{ clientes_por_asesor.get(a.id, 0) }}</strong></td>
+                    </tr>
+                  {% else %}
+                    <tr><td colspan="2" class="vacio">Todavía no hay asesores.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <form action="/admin/add_advisor" method="POST" class="tarjeta">
+            <div class="tarjeta__cabeza"><h3>Añadir asesor</h3></div>
+            <div class="campo"><label for="a-nombre">Nombre</label><input id="a-nombre" name="first_name" required maxlength="100"></div>
+            <div class="campo"><label for="a-apellidos">Apellidos</label><input id="a-apellidos" name="last_name" required maxlength="100"></div>
+            <div class="campo"><label for="a-email">Email</label><input id="a-email" type="email" name="email" required maxlength="120"></div>
+            <div class="campo"><label for="a-clave">Contraseña inicial</label><input id="a-clave" type="password" name="password" required minlength="8" autocomplete="new-password"></div>
+            <button type="submit" class="boton boton--primario boton--ancho">Crear asesor</button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

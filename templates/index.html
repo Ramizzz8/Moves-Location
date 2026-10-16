@@ -6,16 +6,16 @@
 
 <main>
   <!-- ============ HERO con parallax ============ -->
-  <section class="hero" data-parallax>
+  <section class="hero" data-parallax data-inclinar>
     <div class="capa capa--estrellas" data-velocidad="0.25"></div>
     <div class="capa capa--globo" data-velocidad="0.18">
-      <div>{% include '_globo.html' %}</div>
+      <div data-profundidad="18">{% include '_globo.html' %}</div>
     </div>
     <div class="capa capa--nubes" data-velocidad="-0.12">
       <div class="nube nube--1"></div><div class="nube nube--2"></div><div class="nube nube--3"></div>
     </div>
     <div class="capa capa--avion" data-velocidad="-0.35">
-      <svg class="avion" viewBox="0 0 64 64" aria-hidden="true">
+      <svg class="avion" viewBox="0 0 64 64" data-profundidad="-30" aria-hidden="true">
         <path d="M58 8 6 28l17 6 4 18 9-12 13 9z" fill="#fff"/>
         <path d="M23 34 58 8 27 38z" fill="#d7e3f5"/>
         <path d="M27 38l-4 14 9-12z" fill="#b8c8e2"/>

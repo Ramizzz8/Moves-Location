@@ -58,6 +58,20 @@
     mover();
   }
 
+  // Inclinación suave del hero siguiendo al ratón
+  const hero = $('[data-inclinar]');
+  if (hero && !movimientoReducido && matchMedia('(pointer: fine)').matches) {
+    const objetivos = $$('[data-profundidad]', hero);
+    hero.addEventListener('pointermove', (e) => {
+      const x = e.clientX / innerWidth - 0.5;
+      const y = e.clientY / innerHeight - 0.5;
+      objetivos.forEach((el) => {
+        const p = parseFloat(el.dataset.profundidad);
+        el.style.translate = `${x * p}px ${y * p}px`;
+      });
+    });
+  }
+
   // ---------- Aparición al hacer scroll y contadores ----------
   const animarContador = (el) => {
     const final = parseFloat(el.dataset.contador);

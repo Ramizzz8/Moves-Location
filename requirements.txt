@@ -3,4 +3,5 @@ Flask-SQLAlchemy
 Flask-Mail
 gunicorn
 PyMySQL
+cryptography
 python-dotenv

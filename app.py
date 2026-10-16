@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, redirect, session, flash, url
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
-from flask_mail import Mail, Message
+# Se renombra para no chocar con el modelo Message (mensajes entre cliente y asesor)
+from flask_mail import Mail, Message as MailMessage
 from functools import wraps
 import pymysql
 import os
@@ -19,6 +20,13 @@ app.secret_key = os.environ.get('SECRET_KEY', 'cambia-esta-clave-en-produccion')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///moves_location.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Comprueba la conexión antes de usarla: MySQL cierra las conexiones inactivas
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_pre_ping': True, 'pool_recycle': 280}
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5 MB por archivo
+
+# Modo demo (despliegue público del portafolio): muestra un aviso con las cuentas de prueba
+# y no envía correos reales.
+DEMO_MODE = os.environ.get('DEMO_MODE') == '1'
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
 app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
 app.config['MAIL_USE_TLS'] = True
@@ -27,7 +35,7 @@ app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
 
 # Configuración para subir archivos
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
+UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', os.path.join(os.getcwd(), 'uploads'))
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -78,6 +86,25 @@ class Message(db.Model):
 with app.app_context():
     db.create_all()
 
+AVISO_DEMO = (
+    '<style>body{padding-bottom:44px}</style>'
+    '<div style="position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#0f172a;color:#e2e8f0;'
+    'font:13px/1.4 system-ui,sans-serif;padding:8px 14px;text-align:center;box-shadow:0 -2px 12px rgba(0,0,0,.25)">'
+    '<strong style="color:#38bdf8">Demo de portafolio</strong> · Datos ficticios que se reinician cada noche · '
+    'Prueba con <code>cliente@moves.demo</code> o <code>admin@moves.demo</code> y la contraseña <code>Demo1234!</code>'
+    '</div>'
+)
+
+
+@app.after_request
+def insertar_aviso_demo(response):
+    if DEMO_MODE and response.mimetype == 'text/html' and not response.direct_passthrough:
+        html = response.get_data(as_text=True)
+        if '</body>' in html:
+            response.set_data(html.replace('</body>', AVISO_DEMO + '</body>', 1))
+    return response
+
+
 # Ruta principal (home)
 @app.route('/')
 def home():
@@ -93,6 +120,9 @@ def login():
         user = User.query.filter_by(email=email).first()
 
         if user and check_password_hash(user.password, password):
+            if user.role == 'advisor':
+                flash('El panel de asesores todavía está en desarrollo. Entra como cliente o como administrador.')
+                return redirect('/login')
             session.clear()
             session['user_id'] = user.id
             session['role'] = user.role
@@ -167,7 +197,11 @@ def dashboard():
         return redirect('/admin/dashboard')
 
     user_id = session['user_id']
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
+    if user is None:
+        # La sesión apunta a un usuario que ya no existe (p. ej. tras reiniciar la demo)
+        session.clear()
+        return redirect('/login')
 
     # Documentos y tipos como antes
     documents = db.session.execute(
@@ -228,8 +262,12 @@ def contact():
         telefono = request.form['telefono']
         mensaje = request.form['mensaje']
 
+        if DEMO_MODE or not app.config['MAIL_USERNAME']:
+            flash('¡Mensaje recibido! (Demo: no se envía ningún correo real.)', 'success')
+            return redirect(url_for('contact'))
+
         try:
-            msg = Message(
+            msg = MailMessage(
                 subject=f"Nuevo mensaje de contacto de {nombre}",
                 sender=app.config['MAIL_USERNAME'],
                 recipients=['ajulianrague@gmail.com'],  # Aquí tu correo de destino
@@ -345,10 +383,10 @@ def assign_advisor_to_client(client_id):
 @admin_required
 def cambiar_status(id):
     nuevo_status = request.form['status']
-    proceso = db.session.execute('SELECT * FROM processes WHERE id = :id', {'id': id}).first()
+    proceso = db.session.execute(text('SELECT * FROM processes WHERE id = :id'), {'id': id}).first()
 
     if proceso:
-        db.session.execute('UPDATE processes SET status = :status WHERE id = :id', {'status': nuevo_status, 'id': id})
+        db.session.execute(text('UPDATE processes SET status = :status WHERE id = :id'), {'status': nuevo_status, 'id': id})
         db.session.commit()
         flash('Estado del proceso actualizado')
     return redirect('/admin/dashboard')
@@ -448,4 +486,4 @@ def send_message():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.environ.get('FLASK_DEBUG') == '1')

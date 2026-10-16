@@ -4,36 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - MovesLocation</title>
-  <link rel="stylesheet" href__="/static/css/style.css">
-  <link rel="preconnect" href__="https://fonts.googleapis.com">
-  <link rel="preconnect" href__="https://fonts.gstatic.com" crossorigin>
-  <link href__="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/admin_dashboard.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 </head>
 <body class="light-mode admin-page">
+  {% include '_avisos.html' %}
   
   <!-- Sidebar de Administración -->
   <aside class="admin-sidebar">
     <div class="sidebar-header">
-      <a href__="/" class="logo">
+      <a href="/" class="logo">
         <img src="/static/images/logo.png" alt="MovesLocation">
       </a>
     </div>
     <nav class="sidebar-nav">
-      <a href__="#clientes" class="nav-item active" data-section="clientes">
+      <a href="#clientes" class="nav-item active" data-section="clientes">
         <span class="nav-icon">👥</span>
         <span class="nav-text">Clientes</span>
       </a>
-      <a href__="#admin-processes" class="nav-item" data-section="admin-processes">
+      <a href="#admin-processes" class="nav-item" data-section="admin-processes">
         <span class="nav-icon">🔄</span>
         <span class="nav-text">Procesos</span>
       </a>
-      <a href__="#admin-documents" class="nav-item" data-section="admin-documents">
+      <a href="#admin-documents" class="nav-item" data-section="admin-documents">
         <span class="nav-icon">📂</span>
         <span class="nav-text">Documentos</span>
       </a>
     </nav>
     <div class="sidebar-footer">
-      <a href__="/logout" class="liquid-button outline full-width">
+      <a href="/logout" class="liquid-button outline full-width">
         <span>Cerrar Sesión</span>
       </a>
     </div>
@@ -172,7 +174,7 @@
               {% for doc in user_docs %}
               <tr>
                 <td>{{ doc.type_name }}</td>
-                <td><a href__="{{ url_for('uploaded_file', filename=doc.file_path) }}" target="_blank" class="link-accent">Ver Archivo</a></td>
+                <td><a href="{{ url_for('uploaded_file', filename=doc.file_path) }}" target="_blank" class="link-accent">Ver Archivo</a></td>
                 <td>{{ doc.uploaded_at.strftime('%d/%m/%Y') }}</td>
                 <td><span class="status-badge {{ doc.status }}">{{ doc.status }}</span></td>
                 <td>

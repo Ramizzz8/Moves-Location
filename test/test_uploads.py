@@ -5,13 +5,13 @@ def login_client(client):
         sess['user_id'] = 1
         sess['role'] = 'client'
 
-def test_upload_without_file(client):
+def test_upload_without_file(client, init_database):
     login_client(client)
 
     response = client.post('/upload_document', data={}, follow_redirects=True)
     assert b'Por favor selecciona un archivo' in response.data
 
-def test_upload_invalid_extension(client):
+def test_upload_invalid_extension(client, init_database):
     login_client(client)
 
     data = {
@@ -26,7 +26,7 @@ def test_upload_invalid_extension(client):
 
     assert b'Tipo de archivo no permitido' in response.data
 
-def test_upload_valid_file(client):
+def test_upload_valid_file(client, init_database):
     login_client(client)
 
     data = {
